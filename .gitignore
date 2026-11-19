@@ -1,0 +1,19 @@
+# Local builds and proof replays
+.lake/
+__pycache__/
+*.pyc
+/formalization/OddPiPowers/logs/replay/
+
+# LaTeX intermediates
+*.aux
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+/paper/**/*.log
+/paper/*.log
+
+# OS metadata
+.DS_Store
+Thumbs.db

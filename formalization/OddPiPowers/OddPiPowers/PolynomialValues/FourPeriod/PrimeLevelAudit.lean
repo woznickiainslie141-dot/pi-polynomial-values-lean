@@ -1,0 +1,10 @@
+module
+
+import OddPiPowers.PolynomialValues.FourPeriod.PrimeCutDenominator
+
+#print axioms PiPolynomialValues.FourPeriod.column_difference_det
+#print axioms PiPolynomialValues.FourPeriod.differencedKernel_prime_power
+#print axioms PiPolynomialValues.FourPeriod.groupedRankCharge_le
+#print axioms PiPolynomialValues.FourPeriod.raw_prime_level_bound
+#print axioms PiPolynomialValues.FourPeriod.quotient_prime_level_bound
+#print axioms PiPolynomialValues.FourPeriod.primeLevelBudget_empty

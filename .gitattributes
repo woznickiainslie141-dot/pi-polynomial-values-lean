@@ -1,0 +1,4 @@
+# Source and evidence hashes refer to the exact accepted file bytes.
+* -text
+*.pdf binary
+*.zip binary

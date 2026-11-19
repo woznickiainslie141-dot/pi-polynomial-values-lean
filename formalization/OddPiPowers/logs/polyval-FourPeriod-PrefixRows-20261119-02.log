@@ -1,0 +1,16 @@
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\FourPeriod\PrefixRows.lean:34:38: warning: This simp argument is unused:
+  eval₂_C
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [frequencyShift, specializedRow, LinearMap.coe_mk, AddHom.coe_mk, hj, rawEntry_shift_zero,
+    eval₂_mul, map_intCast, hcast, Nat.cast_zero, zero_mul, add_zero]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\FourPeriod\PrefixRows.lean:38:49: warning: This simp argument is unused:
+  eval₂_C
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [frequencyShift, specializedRow, LinearMap.coe_mk, AddHom.coe_mk, hj, hprev, rawEntry_shift_succ,
+    eval₂_add, eval₂_mul, eval₂_natCast, eval₂_ofNat, map_intCast, hcast]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

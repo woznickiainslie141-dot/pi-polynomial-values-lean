@@ -1,0 +1,6 @@
+module
+
+import OddPiPowers.PolynomialValues.QuadraticEndpoint
+
+#print axioms PiPolynomialValues.pi_quadratic_endpoint
+#print axioms PiPolynomialValues.pi_quadratic_omega_le

@@ -1,0 +1,9 @@
+module
+
+import OddPiPowers.PolynomialValues.FourPeriod.EulerWronskian
+import OddPiPowers.PolynomialValues.FourPeriod.TrajectoryColumns
+
+#print axioms PiPolynomialValues.FourPeriod.exp_polynomial_sum_eq_zero_iff
+#print axioms PiPolynomialValues.FourPeriod.exists_distinct_first_coefficients
+#print axioms PiPolynomialValues.FourPeriod.euler_det_ne_zero
+#print axioms PiPolynomialValues.FourPeriod.trajectory_columns_independent

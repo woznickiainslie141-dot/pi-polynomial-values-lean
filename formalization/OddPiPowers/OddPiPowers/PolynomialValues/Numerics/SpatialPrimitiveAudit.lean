@@ -1,0 +1,19 @@
+module
+
+import OddPiPowers.PolynomialValues.Numerics.Certificates.Mesh.All
+import OddPiPowers.PolynomialValues.Analysis.FieldChord
+import OddPiPowers.PolynomialValues.Analysis.PricedBandCells
+import OddPiPowers.PolynomialValues.Analysis.FiniteLabelPrice
+import OddPiPowers.PolynomialValues.Analysis.CorrectionPath
+
+#print axioms PiPolynomialValues.mesh_inc_bounds
+#print axioms PiPolynomialValues.meshPrimitive_sound
+#print axioms PiPolynomialValues.Certificates.primitiveMesh_valid
+#print axioms PiPolynomialValues.Certificates.primitiveMesh_enclosed
+#print axioms PiPolynomialValues.primitive_chord_pos
+#print axioms PiPolynomialValues.total_chord_allowance
+#print axioms PiPolynomialValues.meshField_chord
+#print axioms PiPolynomialValues.FourPeriod.priced_band_limit
+#print axioms PiPolynomialValues.FourPeriod.finite_priced_origin
+#print axioms PiPolynomialValues.path_sine_moment
+#print axioms PiPolynomialValues.correctionPath_absolute_error

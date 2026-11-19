@@ -1,0 +1,12 @@
+module
+
+public import OddPiPowers.PolynomialValues.Numerics.Certificates.References.ReferenceNode3Ordinary000
+public import OddPiPowers.PolynomialValues.Numerics.Certificates.References.ReferenceNode3Ordinary001
+public import OddPiPowers.PolynomialValues.Numerics.Certificates.References.ReferenceNode3Ordinary002
+
+@[expose] public section
+
+namespace PiPolynomialValues.Certificates
+
+
+end PiPolynomialValues.Certificates

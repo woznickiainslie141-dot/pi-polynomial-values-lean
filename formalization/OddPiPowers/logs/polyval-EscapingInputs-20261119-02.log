@@ -1,0 +1,6 @@
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\EscapingInputs.lean:48:32: warning: `simp` already closes the goal
+
+Hint: Use `simp` instead of `simpa`:
+  [apply] simp [he] at hdeg
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`

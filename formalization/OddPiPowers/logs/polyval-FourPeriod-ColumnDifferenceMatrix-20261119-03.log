@@ -1,0 +1,28 @@
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\FourPeriod\ColumnDifferenceMatrix.lean:89:8: warning: `if_true` has been deprecated: Use `ite_true` instead
+
+Hint: Replace the deprecated name:
+  i̵f̵_̵t̵r̵u̵e̵i̲t̲e̲_̲t̲r̲u̲e̲
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\FourPeriod\ColumnDifferenceMatrix.lean:88:81: warning: This simp argument is unused:
+  true_and
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [g, differenceMatrix, Matrix.of_apply, d.apply_symm_apply, hc, ho, hle, if_true, ite_true, le_refl,
+    and_self]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\FourPeriod\ColumnDifferenceMatrix.lean:89:16: warning: This simp argument is unused:
+  ite_true
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [g, differenceMatrix, Matrix.of_apply, d.apply_symm_apply, hc, ho, hle, true_and, if_true, le_refl,
+    and_self]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\FourPeriod\ColumnDifferenceMatrix.lean:89:25: warning: This simp argument is unused:
+  le_refl
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [g, differenceMatrix, Matrix.of_apply, d.apply_symm_apply, hc, ho, hle, true_and, if_true, ite_true,
+    and_self]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

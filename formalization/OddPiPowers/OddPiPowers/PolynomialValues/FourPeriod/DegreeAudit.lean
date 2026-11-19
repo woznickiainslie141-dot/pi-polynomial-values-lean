@@ -1,0 +1,11 @@
+module
+
+import OddPiPowers.PolynomialValues.FourPeriod.ActualDegree
+
+#print axioms PiPolynomialValues.FourPeriod.quadratic_actual_degree
+#print axioms PiPolynomialValues.FourPeriod.cubic_actual_degree
+#print axioms PiPolynomialValues.FourPeriod.quadratic_degree_per_column
+#print axioms PiPolynomialValues.FourPeriod.cubic_degree_per_column
+
+#check PiPolynomialValues.FourPeriod.quadratic_actual_degree
+#check PiPolynomialValues.FourPeriod.cubic_actual_degree

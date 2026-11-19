@@ -1,0 +1,23 @@
+module
+
+import OddPiPowers.PolynomialValues.RootSpacing
+import OddPiPowers.PolynomialValues.Analysis.SelectedEvaluation
+import OddPiPowers.PolynomialValues.Analysis.BoundaryFieldApproximation
+import OddPiPowers.PolynomialValues.Analysis.CorrectedMoment
+import OddPiPowers.PolynomialValues.Analysis.AllocationEnergy
+import OddPiPowers.PolynomialValues.Analysis.FieldIntegral
+import OddPiPowers.PolynomialValues.Analysis.EdgeCharge
+import OddPiPowers.PolynomialValues.Analysis.QuantileMoment
+
+#print axioms PiPolynomialValues.log_resultant_obstruction
+#print axioms PiPolynomialValues.quadratic_secondary_distance
+#print axioms PiPolynomialValues.cubic_secondary_distances
+#print axioms PiPolynomialValues.closest_root_real
+#print axioms PiPolynomialValues.FourPeriod.SelectedPolynomial.reduced_eval_of_unit_bound
+#print axioms PiPolynomialValues.FourPeriod.SelectedPolynomial.eval_le_centered_labels
+#print axioms PiPolynomialValues.integrable_boundary_path
+#print axioms PiPolynomialValues.correction_mean_limit
+#print axioms PiPolynomialValues.allocation_energy_bound
+#print axioms PiPolynomialValues.field_sum_allowance
+#print axioms PiPolynomialValues.edge_interaction
+#print axioms PiPolynomialValues.threshold_band_moment

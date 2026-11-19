@@ -1,0 +1,30 @@
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\Analysis\LogPrimitives.lean:42:58: warning: This simp argument is unused:
+  zero_pow
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [energyPrimitive, zero_mul, mul_zero, zero_div, OfNat.ofNat_ne_zero, not_false_eq_true, add_zero,
+    sub_zero]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\Analysis\LogPrimitives.lean:42:67: warning: This simp argument is unused:
+  OfNat.ofNat_ne_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [energyPrimitive, zero_mul, mul_zero, zero_div, zero_pow, not_false_eq_true, add_zero, sub_zero]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\Analysis\LogPrimitives.lean:43:6: warning: This simp argument is unused:
+  not_false_eq_true
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [energyPrimitive, zero_mul, mul_zero, zero_div, zero_pow, OfNat.ofNat_ne_zero, add_zero, sub_zero]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\Analysis\LogPrimitives.lean:43:24: warning: This simp argument is unused:
+  add_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [energyPrimitive, zero_mul, mul_zero, zero_div, zero_pow, OfNat.ofNat_ne_zero, not_false_eq_true,
+    sub_zero]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

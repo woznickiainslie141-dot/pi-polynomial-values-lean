@@ -1,0 +1,8 @@
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\SortedConjugates.lean:101:47: warning: This simp argument is unused:
+  List.mem_singleton
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [List.nodup_cons, List.mem_cons, not_or, List.nodup_nil, List.not_mem_nil, not_false_eq_true,
+    and_true] at hN
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

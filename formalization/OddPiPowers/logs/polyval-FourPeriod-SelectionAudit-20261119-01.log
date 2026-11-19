@@ -1,0 +1,7 @@
+quadratic_actual_prefix_minor : ∀ (t : ℕ) {y : ℂ}, y ≠ 0 → ShapeHasPrefixMinor quadraticShape quadraticNodeGroups t y
+cubic_actual_prefix_minor : ∀ (t : ℕ) {y : ℂ}, y ≠ 0 → ShapeHasPrefixMinor cubicShape cubicNodeGroups t y
+'PiPolynomialValues.FourPeriod.quadratic_actual_prefix_minor' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.cubic_actual_prefix_minor' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.originOrder_dvd_rawDeterminant' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

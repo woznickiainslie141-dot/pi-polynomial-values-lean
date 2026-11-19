@@ -1,0 +1,4 @@
+'PiPolynomialValues.pi_quadratic_endpoint' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.pi_cubic_endpoint' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.pi_quadratic_omega_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.pi_cubic_omega_le' depends on axioms: [propext, Classical.choice, Quot.sound]

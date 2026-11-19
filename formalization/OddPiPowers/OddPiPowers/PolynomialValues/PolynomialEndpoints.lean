@@ -1,0 +1,4 @@
+module
+
+public import OddPiPowers.PolynomialValues.QuadraticEndpoint
+public import OddPiPowers.PolynomialValues.CubicEndpoint

@@ -1,0 +1,17 @@
+'PiPolynomialValues.SelectedSequence.unit_uniform' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.SelectedSequence.angular_det_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.SelectedSequence.interior_mean' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.SelectedSequence.primary_minor_rate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.SelectedSequence.scalar_minor_rate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.EvaluationScale.finite_origin_credit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.EvaluationScale.priced_rate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.EvaluationScale.principal_rate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.EvaluationScale.secondary_rate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.real_root_resultant' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.EvaluationScale.resultant_rate_contradiction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'PiPolynomialValues.EvaluationPlan.endpoint' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.residualEnergy_components' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.anchorReferenceCost_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.Certificates.zeroOrdinary3' depends on axioms: [propext, Classical.choice, Quot.sound]

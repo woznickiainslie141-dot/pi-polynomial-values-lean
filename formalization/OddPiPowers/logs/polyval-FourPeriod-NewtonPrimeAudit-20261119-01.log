@@ -1,0 +1,7 @@
+'PiPolynomialValues.FourPeriod.factorial_le_tracked' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.newtonRow_prime_derivative' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.rawDeterminant_prime_dvd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.quotient_prime_cost' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.small_prime_log_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.sqrt_log_over_scale_tendsto' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.newton_difference_iter' depends on axioms: [propext, Classical.choice, Quot.sound]

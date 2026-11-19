@@ -1,0 +1,14 @@
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\Analysis\DesignFields.lean:30:8: warning: This simp argument is unused:
+  List.getElem?_map
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [List.getElem?_eq_getElem i.isLt]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\Analysis\DesignFields.lean:30:26: warning: This simp argument is unused:
+  List.getElem?_eq_getElem i.isLt
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [List.getElem?_map]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

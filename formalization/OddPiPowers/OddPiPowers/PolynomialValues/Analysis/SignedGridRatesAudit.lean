@@ -1,0 +1,28 @@
+module
+
+import OddPiPowers.PolynomialValues.RootBudgetLimits
+import OddPiPowers.PolynomialValues.Analysis.SelectedAllocations
+import OddPiPowers.PolynomialValues.Analysis.PathSlopeErrors
+import OddPiPowers.PolynomialValues.Analysis.TaylorLabelCosts
+import OddPiPowers.PolynomialValues.Numerics.Certificates.ZeroOrdinary2
+import OddPiPowers.PolynomialValues.Numerics.Certificates.Costs.Batch2Ordinary004
+import OddPiPowers.PolynomialValues.Numerics.Certificates.Costs.Energy3Ordinary001
+import OddPiPowers.PolynomialValues.Numerics.Certificates.Costs.Energy3Ordinary002
+
+#print axioms PiPolynomialValues.primitive_root_budgets
+#print axioms PiPolynomialValues.SelectedSequence.mixed_field_bound
+#print axioms PiPolynomialValues.referenceFiniteTerm_limit
+#print axioms PiPolynomialValues.referenceInnerTerm_limit
+#print axioms PiPolynomialValues.incrementFamily_spec
+#print axioms PiPolynomialValues.family_slope_error
+#print axioms PiPolynomialValues.AngleDesign.face_integrals
+#print axioms PiPolynomialValues.AngleDesign.direction_moments
+#print axioms PiPolynomialValues.FourPeriod.unit_allocated_rate
+#print axioms PiPolynomialValues.FourPeriod.normalized_rowOrder_upper
+#print axioms PiPolynomialValues.SelectedSequence.references_fit
+#print axioms PiPolynomialValues.SelectedSequence.block_fit
+#print axioms PiPolynomialValues.FourPeriod.chosen_origin_price
+#print axioms PiPolynomialValues.Certificates.evidence2Ordinary006
+#print axioms PiPolynomialValues.Certificates.zeroOrdinary2
+#print axioms PiPolynomialValues.Certificates.residual3Ordinary001
+#print axioms PiPolynomialValues.Certificates.residual3Ordinary002

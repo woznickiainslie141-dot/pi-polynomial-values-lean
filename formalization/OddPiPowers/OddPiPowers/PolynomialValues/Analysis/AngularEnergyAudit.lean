@@ -1,0 +1,21 @@
+module
+
+import OddPiPowers.PolynomialValues.Analysis.ArcGate
+import OddPiPowers.PolynomialValues.Analysis.BoundaryHalves
+import OddPiPowers.PolynomialValues.Analysis.BoundarySlope
+import OddPiPowers.PolynomialValues.Numerics.FactorialCostData
+import OddPiPowers.PolynomialValues.Numerics.ResidualEnergy
+import OddPiPowers.PolynomialValues.Numerics.ReferenceCell
+import OddPiPowers.PolynomialValues.RootLogRates
+import OddPiPowers.PolynomialValues.EscapingInputs
+
+#print axioms PiPolynomialValues.ArcRow.boundary_enclosed
+#print axioms PiPolynomialValues.half_fold_integral
+#print axioms PiPolynomialValues.exists_boundary_slope
+#print axioms PiPolynomialValues.signed_mesh_energy_upper
+#print axioms PiPolynomialValues.reference_cell_integral
+#print axioms PiPolynomialValues.regularEnergy_upper
+#print axioms PiPolynomialValues.residualEnergy_upper
+#print axioms PiPolynomialValues.FourPeriod.Shape.basePass_sound
+#print axioms PiPolynomialValues.endpoint_of_no_escaping_input
+#print axioms PiPolynomialValues.small_value_budget

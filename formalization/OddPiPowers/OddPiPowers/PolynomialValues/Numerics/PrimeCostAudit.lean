@@ -1,0 +1,12 @@
+module
+
+import OddPiPowers.PolynomialValues.Numerics.ActualPrimeCost
+
+#print axioms PiPolynomialValues.FourPeriod.primeLevelBudget_counts
+#print axioms PiPolynomialValues.FourPeriod.actual_row_tail
+#print axioms PiPolynomialValues.FourPeriod.columnLevelCount_eq
+#print axioms PiPolynomialValues.FourPeriod.primeSlice_ramp
+#print axioms PiPolynomialValues.PrimeWindow.all_slabs_prime_rate
+#print axioms PiPolynomialValues.FourPeriod.PrimeCertificate.global_ledger
+#print axioms PiPolynomialValues.FourPeriod.quadratic_actual_prime_cost
+#print axioms PiPolynomialValues.FourPeriod.cubic_actual_prime_cost

@@ -1,0 +1,21 @@
+module
+
+import OddPiPowers.PolynomialValues.Analysis.EndpointFromPlan
+import OddPiPowers.PolynomialValues.Numerics.Certificates.ZeroOrdinary3
+import OddPiPowers.PolynomialValues.Numerics.AnchorWords
+
+#print axioms PiPolynomialValues.SelectedSequence.unit_uniform
+#print axioms PiPolynomialValues.SelectedSequence.angular_det_bound
+#print axioms PiPolynomialValues.SelectedSequence.interior_mean
+#print axioms PiPolynomialValues.SelectedSequence.primary_minor_rate
+#print axioms PiPolynomialValues.SelectedSequence.scalar_minor_rate
+#print axioms PiPolynomialValues.EvaluationScale.finite_origin_credit
+#print axioms PiPolynomialValues.EvaluationScale.priced_rate
+#print axioms PiPolynomialValues.EvaluationScale.principal_rate
+#print axioms PiPolynomialValues.EvaluationScale.secondary_rate
+#print axioms PiPolynomialValues.real_root_resultant
+#print axioms PiPolynomialValues.EvaluationScale.resultant_rate_contradiction
+#print axioms PiPolynomialValues.EvaluationPlan.endpoint
+#print axioms PiPolynomialValues.residualEnergy_components
+#print axioms PiPolynomialValues.anchorReferenceCost_eq
+#print axioms PiPolynomialValues.Certificates.zeroOrdinary3

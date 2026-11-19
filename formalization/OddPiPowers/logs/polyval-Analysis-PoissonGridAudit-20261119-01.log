@@ -1,0 +1,12 @@
+'PiPolynomialValues.FourPeriod.block_scale_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.blockScaleCost_limit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.integral_poissonLaw' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.poissonLaw_probability' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.poissonLaw_conj' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.poissonLaw_fold' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.Certificates.certified_stripe_cost' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.Certificates.quadratic_zero_field_samples' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'PiPolynomialValues.mesh_energy_lags' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.lagEnergyWord_sound' depends on axioms: [propext, Classical.choice, Quot.sound]

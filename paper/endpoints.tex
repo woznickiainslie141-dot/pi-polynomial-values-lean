@@ -1,0 +1,120 @@
+% Build with XeLaTeX (two passes). The source is self-contained.
+\documentclass[11pt,a4paper]{article}
+\usepackage[top=23mm,bottom=23mm,left=24mm,right=24mm,headheight=15pt,headsep=7mm,footskip=12mm]{geometry}
+\usepackage{fontspec,xeCJK}
+\setmainfont[BoldFont=LibertinusSerif-Bold.otf,ItalicFont=LibertinusSerif-Italic.otf]{LibertinusSerif-Regular.otf}
+\setsansfont[BoldFont=LibertinusSans-Bold.otf]{LibertinusSans-Regular.otf}
+\setmonofont{Latin Modern Mono}[Scale=MatchLowercase]
+\setCJKmainfont[BoldFont=FandolSong-Bold.otf,ItalicFont=FandolKai-Regular.otf]{FandolSong-Regular.otf}
+\setCJKsansfont[BoldFont=FandolHei-Bold.otf]{FandolHei-Regular.otf}
+\usepackage{amsmath,amssymb,unicode-math,booktabs,tabularx,array,xcolor,fancyhdr}
+\setmathfont{LibertinusMath-Regular.otf}
+\definecolor{ink}{HTML}{153749}
+\definecolor{muted}{HTML}{415764}
+\usepackage[unicode,colorlinks=true,linkcolor=ink,urlcolor=ink,pdftitle={Uniform bounds for quadratic and cubic polynomial values at pi}]{hyperref}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{muted}圆周率处的整系数多项式值}
+\fancyhead[R]{\small\sffamily\color{muted}19 November 2026}
+\fancyfoot[L]{\small\sffamily\color{muted}Polynomial values at \(\pi\)}
+\fancyfoot[R]{\small\sffamily\color{muted}\thepage}
+\renewcommand{\headrulewidth}{.3pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+\linespread{1.13}
+\renewcommand{\arraystretch}{1.20}
+\newcommand{\code}[1]{{\small\texttt{\detokenize{#1}}}}
+\newcommand{\ptitle}[2]{{\LARGE\sffamily\bfseries\color{ink}#1\par}\vspace{1mm}{\large\itshape\color{muted}#2\par}\vspace{4mm}}
+\newcommand{\subt}[1]{\par\addvspace{3.2mm}{\large\sffamily\bfseries\color{ink}#1\par}\nopagebreak}
+\newcommand{\NN}{\mathbb N}\newcommand{\ZZ}{\mathbb Z}\newcommand{\RR}{\mathbb R}
+\raggedbottom
+\begin{document}
+\ptitle{圆周率处二次与三次整系数多项式值的统一下界}{Uniform lower bounds for quadratic and cubic polynomial values at \(\pi\)}
+
+给定非零整系数多项式 \(P(X)=\sum_j a_jX^j\)，令
+\(H(P)=\max_j |a_j|\)。次数和高度同时有界时，只可能有有限多个这样的多项式。这一有限性把下面的统一下界与逼近指数联系起来。
+
+\subt{统一端点}
+对下表每个 \(d\)，存在常数 \(c_d>0\)，对每个满足 \(\deg P\le d\) 的非零 \(P\in\ZZ[X]\)，都有
+\begin{equation}
+                |P(\pi)| \ \ge\ c_d\,H(P)^{-w_d}.                         \label{eq:endpoint}
+\end{equation}
+同一个 \(c_d\) 适用于这个次数范围内的全部高度，也适用于非零常数、非本原多项式和带重因子的可约多项式。
+
+\begin{center}
+\begin{tabular}{@{}ccl@{}}
+\toprule
+次数上限 \(d\)&端点指数 \(w_d\)&逼近指数的上界\\
+\midrule
+\(2\)&\(16161227/1000000=16.161227\)&\(\omega_2(\pi)\le16.161227\)\\
+\(3\)&\(3426527/125000=27.412216\)&\(\omega_3(\pi)\le27.412216\)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subt{逼近指数与端点的关系}
+\(\omega_d(\pi)\) 是所有满足下述性质的实数 \(t\) 在扩展实数中的上确界：存在无穷多个不同的非零 \(P\in\ZZ[X]\)，使得 \(\deg P\le d\) 且
+\(0<|P(\pi)|<H(P)^{-t}\)。若 \(t>w_d\)，将这个严格上界与式 \eqref{eq:endpoint} 合并，得到 \(H(P)^{t-w_d}<1/c_d\)。这给出了高度上界，因而只剩有限多个 \(P\)。两项 \(\omega\) 上界随之成立。
+
+\subt{Statement in English}
+For \(d=2,3\), the exponent \(w_d\) in the table is attained as a uniform lower-bound exponent. A single positive constant for each degree ceiling works for every nonzero integer polynomial of degree at most \(d\), at every height. The two bounds for \(\omega_d(\pi)\) follow by finiteness at bounded height. The formal declarations have no additional hypotheses.
+
+\newpage
+\ptitle{证明如何从整数见证得到端点}{From integer witnesses to the uniform bound}
+
+\subt{整系数因子与共轭根}
+形式证明先将问题归约到高度趋于无穷的本原不可约多项式序列。对固定次数，序列可取子列以控制各共轭根与 \(\pi\) 的对数接近量。一个很小的 \(P(\pi)\) 迫使这些接近量之和足够大；判别式给出次近根的预算。主根必须是实根，因为非实根与其复共轭到实数 \(\pi\) 的距离相同。度数至多三时，证明中还建立了每个非零输入在 \(\pi\) 处取值非零。
+
+\subt{选取一次辅助多项式}
+四周期插值矩阵在选定的主根处给出非零子式，清分母后得到高斯整系数辅助多项式。估计各共轭根时始终使用这同一个多项式。非零结式给出乘积下界。主根处的有价角度估计、次根处的半径估计，以及显式的次数和分母预算，则给出相反方向的对数上界。两者在假设的逼近序列上矛盾。整多项式的分解随后把下界传回所有合格输入。
+
+\subt{两组实际数值实例}
+每个参考场都带有可在 Lean 核内核验的整数见证。下表的余量是数值实例中的有理参数，式 \eqref{eq:endpoint} 使用首页给出的精确指数。
+
+\begin{center}
+\begin{tabular}{@{}crrrc@{}}
+\toprule
+\(d\)&普通参考场&带锚点参考场&角度标签&证书余量\\
+\midrule
+\(2\)&104&7&104&\(8/10^8\)\\
+\(3\)&93&4&93&\(11/10^8\)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+空间积分把 \(80\,000\) 个网格单元按 \(125\) 个条带计算。角度分割共含 \(205\) 个弧段。素数费用使用 \(402\) 个梯形与 \(27\) 个尾层区间。网格计算还需核验单元内部的积分上界和舍入方向，才能把整数总和用于连续估计。
+
+两组 \code{EvaluationPlan} 都由具体数据构成。通用定理 \code{EvaluationPlan.endpoint} 接收这样一组数据并推出端点；最后的二次、三次公开声明已经分别代入各自的数据。
+
+\newpage
+\ptitle{Lean 验收范围}{Scope of formal verification}
+
+在 Lean \textbf{v4.35.0} 中，合并审计对下列四项逐一检查了完整类型，并分别执行 \code{#print axioms}。声明均位于命名空间 \code{PiPolynomialValues}。其中 \code{Endpoint} 使用实指数，\code{omega} 取值于 \code{EReal}。
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+\toprule
+公开声明&已核验的结论\\
+\midrule
+\code{pi_quadratic_endpoint}&式 \eqref{eq:endpoint}，\(d=2,\ w=16161227/1000000\)\\
+\code{pi_cubic_endpoint}&式 \eqref{eq:endpoint}，\(d=3,\ w=3426527/125000\)\\
+\code{pi_quadratic_omega_le}&\(\omega_2(\pi)\le 16161227/1000000\)\\
+\code{pi_cubic_omega_le}&\(\omega_3(\pi)\le 3426527/125000\)\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+四项传递公理输出相同，均仅含 \code{propext}、\code{Classical.choice} 和 \code{Quot.sound}。输入多项式的整数性、非零性和次数上限已经写入端点定义。常数 \(c_d\) 以存在量词给出。
+
+\subt{构建记录的三个口径}
+\textbf{696} 个本地多项式模块属于最终审计闭包，其中 \(695\) 个发出编译对象，另一个是最终审计入口。它们还导入 \textbf{254} 个本项目此前验收的基础模块，并使用固定版本的外部数学库。\textbf{725} 是包含辅助检查在内的整个多项式串行队列的成功入口数，其中 \(701\) 个发出编译对象。
+
+最终闭包内成功作业的进程树峰值为 \(5600.86\) MiB，合并审计为 \(4912.98\) MiB。原作业限额为进程树 \(6144\) MiB、Lean \(2048\) MiB、单工作线程，每项最多 \(180\) 秒。仓库中的逐模块报告保存源码、编译对象、公理日志及资源记录的摘要。
+
+\subt{与背景讲义的关系}
+随附的中英文讲义用较早的见证给出 \(16.1942\) 与 \(27.4188\)，并讨论充分大次数的渐近系数 \(8.32\)。本次形式验收覆盖上表四项低次结论。一般次数的渐近界、指数的最优性以及显式数值常数 \(c_d\) 属于这一验收范围以外的问题。
+
+{\small\itshape The audited root covers precisely the two uniform endpoints and their two exponent corollaries. The large-degree asymptotic in the background manuscripts has separate status.}\par
+\vfill
+{\small\href{https://github.com/woznickiainslie141-dot/pi-polynomial-values-lean}{GitHub repository}\quad
+\href{https://github.com/woznickiainslie141-dot/pi-polynomial-values-lean/blob/main/formalization/OddPiPowers/OddPiPowers/PolynomialValues/PolynomialEndpointsAudit.lean}{Four signatures and audit commands}}
+\end{document}

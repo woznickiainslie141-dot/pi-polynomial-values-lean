@@ -1,0 +1,5 @@
+'PiPolynomialValues.FourPeriod.commonDenominator_prime_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.exists_cleared_quotient' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.log_commonDenominator_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.quadratic_actual_normalized' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.cubic_actual_normalized' depends on axioms: [propext, Classical.choice, Quot.sound]

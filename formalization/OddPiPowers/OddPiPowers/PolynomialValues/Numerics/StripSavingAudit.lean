@@ -1,0 +1,13 @@
+module
+
+import OddPiPowers.PolynomialValues.Numerics.ActualStripSaving
+import OddPiPowers.PolynomialValues.FourPeriod.PositivePrimeBudget
+
+#print axioms PiPolynomialValues.FourPeriod.quadratic_selected
+#print axioms PiPolynomialValues.FourPeriod.cubic_selected
+#print axioms PiPolynomialValues.PrimeWindow.actual_column_inventory
+#print axioms PiPolynomialValues.PrimeWindow.RowData.selected_floor_sum
+#print axioms PiPolynomialValues.PrimeWindow.folded_lattice_card
+#print axioms PiPolynomialValues.PrimeWindow.checked_lattice_surplus
+#print axioms PiPolynomialValues.PrimeWindow.selected_strip_prime_cost
+#print axioms PiPolynomialValues.FourPeriod.SelectedPolynomial.level_cost_int

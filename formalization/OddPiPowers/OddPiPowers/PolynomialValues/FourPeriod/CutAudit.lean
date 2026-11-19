@@ -1,0 +1,13 @@
+module
+
+import OddPiPowers.PolynomialValues.FourPeriod.CutQuotient
+
+#print axioms PiPolynomialValues.FourPeriod.originOrder_prefix_eq
+#print axioms PiPolynomialValues.FourPeriod.rowPolynomialMatrix_det
+#print axioms PiPolynomialValues.FourPeriod.raw_degree_frequency_loss
+#print axioms PiPolynomialValues.FourPeriod.cutQuota_prefix_sum_lower
+#print axioms PiPolynomialValues.FourPeriod.quadratic_actual_cut_quotient
+#print axioms PiPolynomialValues.FourPeriod.cubic_actual_cut_quotient
+
+#check PiPolynomialValues.FourPeriod.quadratic_actual_cut_quotient
+#check PiPolynomialValues.FourPeriod.cubic_actual_cut_quotient

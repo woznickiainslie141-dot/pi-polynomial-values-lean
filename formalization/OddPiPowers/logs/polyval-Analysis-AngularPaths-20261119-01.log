@@ -1,0 +1,18 @@
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\Analysis\AngularPaths.lean:50:51: warning: This simp argument is unused:
+  zero_add
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [correctedPhase, correctedPolynomialPath, Complex.mul_re, Complex.I_re, Complex.I_im, zero_mul,
+    one_mul, zero_sub, Complex.add_im, Complex.mul_im, Complex.sub_re, Complex.sub_im, Complex.ofReal_re,
+    Complex.ofReal_im, h, sub_zero, mul_zero, add_zero]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\Analysis\AngularPaths.lean:50:60: warning: This simp argument is unused:
+  mul_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [correctedPhase, correctedPolynomialPath, Complex.mul_re, Complex.I_re, Complex.I_im, zero_mul,
+    one_mul, zero_sub, Complex.add_im, Complex.mul_im, Complex.sub_re, Complex.sub_im, Complex.ofReal_re,
+    Complex.ofReal_im, h, sub_zero, zero_add, add_zero]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

@@ -1,0 +1,9 @@
+'PiPolynomialValues.FourPeriod.quadratic_prefix_lt' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.cubic_prefix_lt' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.quadratic_last_prefix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.cubic_last_prefix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.rawEntry_shift_succ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.rawDeterminant_degree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.rawDeterminant_eval_ne_zero_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

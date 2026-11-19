@@ -1,0 +1,11 @@
+module
+
+import OddPiPowers.PolynomialValues.FourPeriod.ResidueDenominator
+
+#print axioms PiPolynomialValues.FourPeriod.det_by_node_allocations
+#print axioms PiPolynomialValues.FourPeriod.nonzero_node_allocation
+#print axioms PiPolynomialValues.FourPeriod.coeff_det_column_sum
+#print axioms PiPolynomialValues.FourPeriod.coeff_node_block_dvd
+#print axioms PiPolynomialValues.FourPeriod.quotient_collision_dvd
+#print axioms PiPolynomialValues.FourPeriod.residueSurplus_le_allocated
+#print axioms PiPolynomialValues.FourPeriod.quotient_prime_residue_saving

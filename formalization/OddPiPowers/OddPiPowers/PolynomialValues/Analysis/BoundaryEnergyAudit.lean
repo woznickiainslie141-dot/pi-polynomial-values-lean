@@ -1,0 +1,15 @@
+module
+
+import OddPiPowers.PolynomialValues.Analysis.PerturbationExpansion
+import OddPiPowers.PolynomialValues.Analysis.FactorialPrefixSize
+import OddPiPowers.PolynomialValues.Analysis.EmpiricalPairBound
+import OddPiPowers.PolynomialValues.Analysis.StepCharge
+
+#print axioms PiPolynomialValues.FourPeriod.integer_derivative_block_norm
+#print axioms PiPolynomialValues.FourPeriod.pathMatrix_bound
+#print axioms PiPolynomialValues.FourPeriod.normalized_det_perturbation
+#print axioms PiPolynomialValues.FourPeriod.log_factorialWeight_upper
+#print axioms PiPolynomialValues.FourPeriod.empirical_pair_bound
+#print axioms PiPolynomialValues.radial_dual_residual
+#print axioms PiPolynomialValues.intervalPotential_limit
+#print axioms PiPolynomialValues.stepInteraction_limit

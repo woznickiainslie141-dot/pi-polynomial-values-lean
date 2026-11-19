@@ -1,0 +1,32 @@
+module
+
+import OddPiPowers.PolynomialValues.Numerics.ReferenceEvidence
+import OddPiPowers.PolynomialValues.Numerics.Certificates.AngleDesign2
+import OddPiPowers.PolynomialValues.Numerics.Certificates.AngleDesign3
+import OddPiPowers.PolynomialValues.Numerics.Certificates.Costs.Trap3Ordinary000
+import OddPiPowers.PolynomialValues.Numerics.Certificates.Costs.Evidence2Ordinary000
+import OddPiPowers.PolynomialValues.Numerics.Certificates.Costs.Evidence2Ordinary001
+import OddPiPowers.PolynomialValues.Numerics.Certificates.Costs.Energy2Tilted000
+import OddPiPowers.PolynomialValues.Analysis.ReferenceAllocation
+import OddPiPowers.PolynomialValues.Analysis.ReferenceGridLimit
+import OddPiPowers.PolynomialValues.Analysis.TailCapLimit
+import OddPiPowers.PolynomialValues.Analysis.AngularPaths
+import OddPiPowers.PolynomialValues.Analysis.AngularSupport
+import OddPiPowers.PolynomialValues.RootRateLimits
+
+#print axioms PiPolynomialValues.FourPeriod.determinant_allocated_rate
+#print axioms PiPolynomialValues.reference_allocation_bound
+#print axioms PiPolynomialValues.FourPeriod.columnPriceSum_limit
+#print axioms PiPolynomialValues.spatial_rate_majorant
+#print axioms PiPolynomialValues.Certificates.trap3Ordinary000
+#print axioms PiPolynomialValues.Certificates.evidence2Ordinary000
+#print axioms PiPolynomialValues.Certificates.evidence2Ordinary001
+#print axioms PiPolynomialValues.Certificates.residual2Tilted000
+#print axioms PiPolynomialValues.Certificates.angleDesign2_rates
+#print axioms PiPolynomialValues.Certificates.angleDesign3_rates
+#print axioms PiPolynomialValues.FourPeriod.actual_quantile_tail
+#print axioms PiPolynomialValues.allocated_tail_direction
+#print axioms PiPolynomialValues.AngleDesign.weightAt_one
+#print axioms PiPolynomialValues.signed_form_path
+#print axioms PiPolynomialValues.secondary_log_sum
+#print axioms PiPolynomialValues.subseq_cappedProximity

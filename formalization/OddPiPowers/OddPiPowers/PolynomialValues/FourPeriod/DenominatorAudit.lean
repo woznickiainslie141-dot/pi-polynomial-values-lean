@@ -1,0 +1,9 @@
+module
+
+import OddPiPowers.PolynomialValues.FourPeriod.ActualDenominator
+
+#print axioms PiPolynomialValues.FourPeriod.commonDenominator_prime_bound
+#print axioms PiPolynomialValues.FourPeriod.exists_cleared_quotient
+#print axioms PiPolynomialValues.FourPeriod.log_commonDenominator_le
+#print axioms PiPolynomialValues.FourPeriod.quadratic_actual_normalized
+#print axioms PiPolynomialValues.FourPeriod.cubic_actual_normalized

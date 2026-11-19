@@ -1,0 +1,26 @@
+'PiPolynomialValues.FourPeriod.originOrder_prefix_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.rowPolynomialMatrix_det' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.raw_degree_frequency_loss' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.cutQuota_prefix_sum_lower' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.quadratic_actual_cut_quotient' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.cubic_actual_cut_quotient' depends on axioms: [propext, Classical.choice, Quot.sound]
+PiPolynomialValues.FourPeriod.quadratic_actual_cut_quotient (t : ℕ) {y : ℂ} (hy : y ≠ 0) :
+  PiPolynomialValues.FourPeriod.HasCutQuotient
+    (fun i =>
+      PiPolynomialValues.FourPeriod.scanRowCount PiPolynomialValues.FourPeriod.quadraticShape t
+        (PiPolynomialValues.FourPeriod.scannedNode PiPolynomialValues.FourPeriod.quadraticNodeGroups i))
+    (PiPolynomialValues.FourPeriod.scannedNode PiPolynomialValues.FourPeriod.quadraticNodeGroups)
+    PiPolynomialValues.FourPeriod.columnLabel
+    (PiPolynomialValues.FourPeriod.quadraticShape.band t
+      ⟨0, PiPolynomialValues.FourPeriod.quadratic_actual_cut_quotient._proof_1⟩)
+    y
+PiPolynomialValues.FourPeriod.cubic_actual_cut_quotient (t : ℕ) {y : ℂ} (hy : y ≠ 0) :
+  PiPolynomialValues.FourPeriod.HasCutQuotient
+    (fun i =>
+      PiPolynomialValues.FourPeriod.scanRowCount PiPolynomialValues.FourPeriod.cubicShape t
+        (PiPolynomialValues.FourPeriod.scannedNode PiPolynomialValues.FourPeriod.cubicNodeGroups i))
+    (PiPolynomialValues.FourPeriod.scannedNode PiPolynomialValues.FourPeriod.cubicNodeGroups)
+    PiPolynomialValues.FourPeriod.columnLabel
+    (PiPolynomialValues.FourPeriod.cubicShape.band t
+      ⟨0, PiPolynomialValues.FourPeriod.cubic_actual_cut_quotient._proof_1⟩)
+    y

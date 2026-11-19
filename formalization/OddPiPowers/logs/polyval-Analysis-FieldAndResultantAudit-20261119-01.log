@@ -1,0 +1,16 @@
+'PiPolynomialValues.log_resultant_obstruction' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.quadratic_secondary_distance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.cubic_secondary_distances' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.closest_root_real' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.SelectedPolynomial.reduced_eval_of_unit_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'PiPolynomialValues.FourPeriod.SelectedPolynomial.eval_le_centered_labels' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'PiPolynomialValues.integrable_boundary_path' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.correction_mean_limit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.allocation_energy_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.field_sum_allowance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.edge_interaction' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.threshold_band_moment' depends on axioms: [propext, Classical.choice, Quot.sound]

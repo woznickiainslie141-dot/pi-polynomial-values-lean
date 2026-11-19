@@ -1,0 +1,10 @@
+'PiPolynomialValues.FourPeriod.quadratic_selected' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.cubic_selected' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.PrimeWindow.actual_column_inventory' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.PrimeWindow.RowData.selected_floor_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.PrimeWindow.folded_lattice_card' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.PrimeWindow.checked_lattice_surplus' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.PrimeWindow.selected_strip_prime_cost' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.SelectedPolynomial.level_cost_int' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

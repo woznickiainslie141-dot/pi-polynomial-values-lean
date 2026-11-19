@@ -1,0 +1,8 @@
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\Analysis\PoissonMajorant.lean:29:48: warning: `ContinuousOn.restrict` has been deprecated: Use `ContinuousOn.domRestrict` instead
+D:\codex\pi-irrationality\formalization\OddPiPowers\OddPiPowers\PolynomialValues\Analysis\PoissonMajorant.lean:46:62: warning: This simp argument is unused:
+  norm_mul
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [g, Complex.norm_exp]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

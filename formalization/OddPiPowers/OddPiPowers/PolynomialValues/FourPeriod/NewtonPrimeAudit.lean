@@ -1,0 +1,12 @@
+module
+
+import OddPiPowers.PolynomialValues.FourPeriod.SmallPrimeBound
+import OddPiPowers.PolynomialValues.FourPeriod.NewtonDifference
+
+#print axioms PiPolynomialValues.FourPeriod.factorial_le_tracked
+#print axioms PiPolynomialValues.FourPeriod.newtonRow_prime_derivative
+#print axioms PiPolynomialValues.FourPeriod.rawDeterminant_prime_dvd
+#print axioms PiPolynomialValues.FourPeriod.quotient_prime_cost
+#print axioms PiPolynomialValues.FourPeriod.small_prime_log_sum
+#print axioms PiPolynomialValues.FourPeriod.sqrt_log_over_scale_tendsto
+#print axioms PiPolynomialValues.FourPeriod.newton_difference_iter

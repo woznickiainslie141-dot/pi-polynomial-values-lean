@@ -1,0 +1,17 @@
+module
+
+import OddPiPowers.PolynomialValues.Numerics.Certificates.QuadraticArcs
+import OddPiPowers.PolynomialValues.Numerics.Certificates.CubicArcs
+import OddPiPowers.PolynomialValues.Numerics.Certificates.QuadraticPrimeCost
+import OddPiPowers.PolynomialValues.Numerics.Certificates.CubicPrimeCost
+
+#print axioms PiPolynomialValues.quadraticArcs_chain
+#print axioms PiPolynomialValues.quadraticArcs_integrals
+#print axioms PiPolynomialValues.cubicArcs_chain
+#print axioms PiPolynomialValues.cubicArcs_integrals
+#print axioms PiPolynomialValues.PrimeWindow.quadraticSlabs_checked
+#print axioms PiPolynomialValues.PrimeWindow.cubicSlabs_checked
+#print axioms PiPolynomialValues.FourPeriod.quadraticTail_sum
+#print axioms PiPolynomialValues.FourPeriod.cubicTail_sum
+#print axioms PiPolynomialValues.FourPeriod.quadraticPrime_finite_cost
+#print axioms PiPolynomialValues.FourPeriod.cubicPrime_finite_cost

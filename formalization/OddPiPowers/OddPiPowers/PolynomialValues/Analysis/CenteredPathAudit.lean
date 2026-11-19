@@ -1,0 +1,17 @@
+module
+
+import OddPiPowers.PolynomialValues.Analysis.CenteredPathEstimate
+import OddPiPowers.PolynomialValues.Analysis.CenteredAllocation
+import OddPiPowers.PolynomialValues.Analysis.FixedResidual
+import OddPiPowers.PolynomialValues.Analysis.BandCharge
+
+#print axioms PiPolynomialValues.FourPeriod.normalized_det_centered
+#print axioms PiPolynomialValues.FourPeriod.centeredLabelMatrix_factor
+#print axioms PiPolynomialValues.unitPoisson_mean
+#print axioms PiPolynomialValues.factored_poisson_majorant
+#print axioms PiPolynomialValues.FourPeriod.centered_path_poisson
+#print axioms PiPolynomialValues.FourPeriod.centered_positive_allocation
+#print axioms PiPolynomialValues.FourPeriod.allocated_price
+#print axioms PiPolynomialValues.radial_dual_fixed
+#print axioms PiPolynomialValues.FourPeriod.allocatedCharge_sum
+#print axioms PiPolynomialValues.FourPeriod.bandCharge_residual_limit

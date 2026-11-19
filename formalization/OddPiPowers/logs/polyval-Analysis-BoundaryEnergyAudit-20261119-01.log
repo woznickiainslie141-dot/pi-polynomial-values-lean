@@ -1,0 +1,8 @@
+'PiPolynomialValues.FourPeriod.integer_derivative_block_norm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.pathMatrix_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.normalized_det_perturbation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.log_factorialWeight_upper' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.empirical_pair_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.radial_dual_residual' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.intervalPotential_limit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.stepInteraction_limit' depends on axioms: [propext, Classical.choice, Quot.sound]

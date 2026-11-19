@@ -1,0 +1,22 @@
+module
+
+import OddPiPowers.PolynomialValues.Numerics.ReferenceIntegral
+import OddPiPowers.PolynomialValues.Analysis.ResidualCharge
+import OddPiPowers.PolynomialValues.Analysis.MeasurablePathBound
+import OddPiPowers.PolynomialValues.Analysis.BlockAmplitude
+import OddPiPowers.PolynomialValues.Numerics.AngleMixture
+import OddPiPowers.PolynomialValues.Numerics.ResultantMargin
+import OddPiPowers.PolynomialValues.Numerics.RootScaleIndex
+import OddPiPowers.PolynomialValues.Numerics.Certificates.Costs.Trap2Ordinary000
+
+#print axioms PiPolynomialValues.reference_integral_upper
+#print axioms PiPolynomialValues.residual_meshReference
+#print axioms PiPolynomialValues.residualJump_zero
+#print axioms PiPolynomialValues.FourPeriod.centered_path_integral
+#print axioms PiPolynomialValues.FourPeriod.center_column_bound
+#print axioms PiPolynomialValues.AngleDesign.actual_direction_price
+#print axioms PiPolynomialValues.AngleDesign.actual_cost
+#print axioms PiPolynomialValues.FourPeriod.rootScaleIndex_ratio
+#print axioms PiPolynomialValues.quadratic_resultant_margin
+#print axioms PiPolynomialValues.cubic_resultant_margin
+#print axioms PiPolynomialValues.Certificates.trap2Ordinary000

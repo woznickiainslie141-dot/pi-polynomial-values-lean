@@ -1,0 +1,6 @@
+'PiPolynomialValues.FourPeriod.column_difference_det' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.differencedKernel_prime_power' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.groupedRankCharge_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.raw_prime_level_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.quotient_prime_level_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.primeLevelBudget_empty' depends on axioms: [propext, Classical.choice, Quot.sound]

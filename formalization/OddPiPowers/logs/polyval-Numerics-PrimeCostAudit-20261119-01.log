@@ -1,0 +1,10 @@
+'PiPolynomialValues.FourPeriod.primeLevelBudget_counts' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.actual_row_tail' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.columnLevelCount_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.primeSlice_ramp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.PrimeWindow.all_slabs_prime_rate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.PrimeCertificate.global_ledger' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'PiPolynomialValues.FourPeriod.quadratic_actual_prime_cost' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.cubic_actual_prime_cost' depends on axioms: [propext, Classical.choice, Quot.sound]

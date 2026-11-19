@@ -1,0 +1,17 @@
+module
+
+import OddPiPowers.PolynomialValues.Analysis.PoissonQuadrant
+import OddPiPowers.PolynomialValues.Analysis.BlockScale
+import OddPiPowers.PolynomialValues.Numerics.VerifiedBoundaryGrid
+import OddPiPowers.PolynomialValues.Numerics.LagEnergyWord
+
+#print axioms PiPolynomialValues.FourPeriod.block_scale_bound
+#print axioms PiPolynomialValues.FourPeriod.blockScaleCost_limit
+#print axioms PiPolynomialValues.integral_poissonLaw
+#print axioms PiPolynomialValues.poissonLaw_probability
+#print axioms PiPolynomialValues.poissonLaw_conj
+#print axioms PiPolynomialValues.poissonLaw_fold
+#print axioms PiPolynomialValues.Certificates.certified_stripe_cost
+#print axioms PiPolynomialValues.Certificates.quadratic_zero_field_samples
+#print axioms PiPolynomialValues.mesh_energy_lags
+#print axioms PiPolynomialValues.lagEnergyWord_sound

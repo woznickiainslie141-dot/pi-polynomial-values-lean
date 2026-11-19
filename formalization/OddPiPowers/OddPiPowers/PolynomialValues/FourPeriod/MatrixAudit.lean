@@ -1,0 +1,13 @@
+module
+
+import OddPiPowers.PolynomialValues.FourPeriod.Shape
+import OddPiPowers.PolynomialValues.FourPeriod.Degree
+import OddPiPowers.PolynomialValues.FourPeriod.Normalization
+
+#print axioms PiPolynomialValues.FourPeriod.quadratic_prefix_lt
+#print axioms PiPolynomialValues.FourPeriod.cubic_prefix_lt
+#print axioms PiPolynomialValues.FourPeriod.quadratic_last_prefix
+#print axioms PiPolynomialValues.FourPeriod.cubic_last_prefix
+#print axioms PiPolynomialValues.FourPeriod.rawEntry_shift_succ
+#print axioms PiPolynomialValues.FourPeriod.rawDeterminant_degree
+#print axioms PiPolynomialValues.FourPeriod.rawDeterminant_eval_ne_zero_iff

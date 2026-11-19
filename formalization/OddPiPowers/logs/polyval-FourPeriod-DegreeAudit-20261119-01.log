@@ -1,0 +1,10 @@
+'PiPolynomialValues.FourPeriod.quadratic_actual_degree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.cubic_actual_degree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.quadratic_degree_per_column' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PiPolynomialValues.FourPeriod.cubic_degree_per_column' depends on axioms: [propext, Classical.choice, Quot.sound]
+PiPolynomialValues.FourPeriod.quadratic_actual_degree (t : ℕ) {y : ℂ} (hy : y ≠ 0) :
+  PiPolynomialValues.FourPeriod.ShapeDegreeWitness PiPolynomialValues.FourPeriod.quadraticShape
+    PiPolynomialValues.FourPeriod.quadraticNodeGroups t y 27143631494 4675
+PiPolynomialValues.FourPeriod.cubic_actual_degree (t : ℕ) {y : ℂ} (hy : y ≠ 0) :
+  PiPolynomialValues.FourPeriod.ShapeDegreeWitness PiPolynomialValues.FourPeriod.cubicShape
+    PiPolynomialValues.FourPeriod.cubicNodeGroups t y 141186386926 44847
