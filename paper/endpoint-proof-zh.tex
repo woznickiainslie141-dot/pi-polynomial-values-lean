@@ -1,0 +1,814 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[top=23mm,bottom=24mm,left=24mm,right=24mm,headheight=15pt,headsep=8mm,footskip=12mm]{geometry}
+\usepackage{fontspec}
+\setmainfont[BoldFont=LibertinusSerif-Bold.otf,ItalicFont=LibertinusSerif-Italic.otf,BoldItalicFont=LibertinusSerif-BoldItalic.otf]{LibertinusSerif-Regular.otf}
+\setsansfont[BoldFont=LibertinusSans-Bold.otf]{LibertinusSans-Regular.otf}
+\setmonofont{Latin Modern Mono}[Scale=MatchLowercase]
+\usepackage{amsmath,amssymb,mathtools,unicode-math}
+\setmathfont{LibertinusMath-Regular.otf}
+\usepackage{xeCJK}
+\setCJKmainfont[BoldFont=FandolSong-Bold.otf,ItalicFont=FandolKai-Regular.otf]{FandolSong-Regular.otf}
+\setCJKsansfont[BoldFont=FandolHei-Bold.otf]{FandolHei-Regular.otf}
+\setCJKmonofont{FandolFang-Regular.otf}
+\xeCJKsetup{CJKmath=true}
+
+\usepackage{longtable,booktabs,array,calc,enumitem}
+\newcounter{none}
+\usepackage{xcolor,fancyhdr,titlesec,needspace}
+\usepackage[unicode,colorlinks=true,linkcolor=black,urlcolor={rgb,1:red,.08;green,.24;blue,.40},pdfauthor={},pdftitle={整系数多项式在圆周率处的值：二次与三次的统一下界（证明审阅稿）}]{hyperref}
+\usepackage{bookmark}
+\definecolor{heading}{HTML}{15394A}
+\definecolor{muted}{HTML}{405762}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{.43em plus .1em minus .08em}
+\setlength{\emergencystretch}{1.5em}
+\linespread{1.12}
+\raggedbottom
+\setcounter{secnumdepth}{-\maxdimen}
+\setcounter{tocdepth}{2}
+\titleformat{\section}{\Large\sffamily\bfseries\color{heading}}{}{0pt}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{heading}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{1.4em plus .2em}{.45em}
+\titlespacing*{\subsection}{0pt}{1em}{.32em}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\real}[1]{#1}
+\providecommand{\pandocbounded}[1]{#1}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{muted}圆周率处二次与三次整多项式值的下界}
+\fancyfoot[C]{\small\color{muted}\thepage}
+\renewcommand{\headrulewidth}{.25pt}
+\widowpenalty=9000\clubpenalty=9000\displaywidowpenalty=9000
+\allowdisplaybreaks[1]
+
+\usepackage{fvextra}
+\usepackage{tocloft}
+\setcounter{tocdepth}{1}
+\hypersetup{bookmarksdepth=3}
+\setlength{\cftbeforesecskip}{3.25pt}
+\setlength{\cftbeforetoctitleskip}{4pt}
+\setlength{\cftaftertoctitleskip}{4pt}
+\setlength{\cftsecnumwidth}{0pt}
+\setmathfont[version=bold,FakeBold=1.4]{LibertinusMath-Regular.otf}
+\usepackage{microtype}
+\DefineVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\small,breaklines=true}
+\setlength{\emergencystretch}{3em}
+\AtBeginEnvironment{longtable}{\setlength{\tabcolsep}{4pt}}
+\renewcommand{\contentsname}{目录}
+
+\newcommand{\repoentry}[2]{\href{https://github.com/woznickiainslie141-dot/pi-polynomial-values-lean/blob/97a3bf152c993cf260448baf40f6c8322708af06/#1}{#2}}
+\newcommand{\leanentry}[2]{\repoentry{formalization/OddPiPowers/OddPiPowers/PolynomialValues/#1.lean}{#2}}
+\fancyhead[R]{\small\color{muted}证明审阅稿}
+\begin{document}
+
+\thispagestyle{plain}
+{\small\sffamily\color{muted}解析数论\quad$\cdot$\quad 证明审阅稿\hfill 2026 年 11 月 20 日\par}
+\vspace{4mm}
+{\fontsize{24}{31}\selectfont\sffamily\bfseries\color{heading}整系数多项式在圆周率处的值\par}
+{\Large 二次与三次的统一下界\par}
+\medskip
+对于一个非零整系数多项式 \(P\)，系数之间的抵消能把 \(P(\pi)\) 压到多小？
+记 \(H(P)\) 为系数绝对值的最大值。本文证明，次数至多二时存在一个对所有高度都有效的正下界常数，其高度指数可以取 \(16.161227\)；次数至多三时可以取 \(27.412216\)。
+
+证明从一个在实代数根处非零的插值行列式出发。清除分母后，把它在全部共轭根处的值放进同一个结式。结式的模至少为一，而一列足够好的逼近会迫使其模小于一。决定最后六位小数的是两项估计：素数余数类给出的分母节省，以及主根展开中正阶扰动列的额外衰减。
+
+\textbf{读法。} 第 2 节给出结式的下界，第 7 节将各个根的上界相加，第 8 节用两组有理数完成严格比较。若要检查上界的来源，可沿第 3 至 6 节追溯到行列式和积分，再看附录 A 的整格误差。文末按证明步骤列出对应源码与原始见证。
+
+\medskip\tableofcontents
+\clearpage
+\Needspace{5\baselineskip}
+\section{1. 端点定理}
+设 \(P(Y)=\sum_j p_jY^j\in\mathbb Z[Y]\setminus\{0\}\)，记 \(H(P)=\max_j|p_j|\)，\(\mathcal L(P)=\sum_j|p_j|\)。所有对数均为自然对数。
+
+\textbf{定理。} 对 \(d=2,3\)，分别存在 \(c_d>0\)，使每个次数至多 \(d\) 的非零整多项式都满足
+\[
+ |P(\pi)|\ge c_dH(P)^{-w_d},\qquad
+ w_2=\frac{16161227}{1000000},\quad w_3=\frac{3426527}{125000}. \tag{1}\label{eq:1}
+\]
+同一个 \(c_d\) 适用于任意高度、任意整数内容和任意重数。两个指数本身即可取到。常数 \(c_d\) 由证明给出存在性。
+
+\textbf{推论。} 令 \(\omega_d(\pi)\) 为使 \(0<|P(\pi)|<H(P)^{-t}\) 对无穷多个不同的合格 \(P\) 成立的实数 \(t\) 的扩展实数上确界。则
+\[
+ \omega_2(\pi)\le16.161227,\qquad \omega_3(\pi)\le27.412216. \tag{2}\label{eq:2}
+\]
+事实上，若 \(t>w_d\)，两个不等式合起来给出 \(H(P)^{t-w_d}<1/c_d\)。此时 \(d+1\) 个整数系数都落在一个有界区间里，只能组成有限多个多项式。
+
+\textbf{反证的起点。} 先只考虑本原且在 \(\mathbb Q[Y]\) 上不可约的非常数 \(f\)。若它们没有统一常数，则可取一列 \(f\) 使 \(|f(\pi)|H(f)^{w_d}\to0\)。每个固定 \(f\) 在 \(\pi\) 处都非零，有限高度又只有有限个选择，故可使高度趋于无穷并固定次数 \(e\)。第 2 节给出根的逼近率 \(c_i\)；上述假设要求 \(\sum_i c_i\ge 1+w_d\)。下文排除这一情形，再于第 7 节恢复任意 \(P\)。
+
+
+\Needspace{5\baselineskip}
+\section{2. 从多项式的值看它的根}\label{ux4eceux591aux9879ux5f0fux7684ux503cux770bux5b83ux7684ux6839}
+
+把 \(|\pi-\alpha|\) 除以 \(\max(1,|\alpha|)\)，是因为很大的根本来就会使距离很大。除法把这部分大小记入 Mahler 测度，留下真正表示接近程度的量。以下取对数都需要 \(f(\pi)\ne0\)。所用事实及其证明见附录 B.1；该定性事实本身没有给出本文的定量指数。
+
+先设 \(f(Y)=a\prod_{i=1}^{e}(Y-\alpha_i)\) 在有理数域上不可约，系数的最大公因数为一，这称为\textbf{本原}。写 \(1\le e\le d\)，令 \(B_i=\max(1,|\alpha_i|)\)，并记 \(\mathcal M(f)=|a|\prod_iB_i\)。这个量叫作乘法 Mahler 测度。两个多项式相乘时，根的列表合并、首项系数相乘，所以这个测度也相乘，最后一步将用到这一点。三个关于系数大小的量满足
+
+\[
+ H(f)\le \mathcal L(f)\le 2^e\mathcal M(f),\qquad
+ \mathcal M(f)\le\mathcal L(f)\le(e+1)H(f).                             \tag{3}\label{eq:3}
+\]
+
+第一条非平凡不等式来自 \(\mathcal L(f)\le |a|\prod(1+|\alpha_i|)\)。要看另一个方向，不妨把 \(f\) 放到单位圆上。对一个根 \(\alpha\)，\(\log|e^{it}-\alpha|\) 的圆周平均值是 \(\log\max(1,|\alpha|)\)。当 \(|\alpha|<1\) 时，展开 \(\log(1-\alpha e^{-it})\) 取实部，所有非常数项的平均值都为零。当 \(|\alpha|>1\) 时先提出 \(|\alpha|\)。在等于一的边界上取径向极限即可，因为奇点附近的 \(\log|\sin(t/2)|\) 可积。现在把每个根的公式相加，并用 \(|f(e^{it})|\le\mathcal L(f)\)，就得到 \hyperref[eq:3]{(3)}。
+
+\textbf{单位圆上的 Jensen 公式。} 记圆周平均为 \(\langle g\rangle=(2\pi)^{-1}\int_{-\pi}^{\pi}g(t)\,dt\)。当 \(|\alpha|<1\) 时，级数 \(-\sum_{k\ge1}\alpha^ke^{-ikt}/k\) 绝对一致收敛，其实部等于 \(\log|1-\alpha e^{-it}|\)。逐项积分，每个 \(k\ge1\) 的项积分为零。当 \(|\alpha|>1\) 时写成 \(\log|\alpha|+\log|1-e^{it}/\alpha|\)，第二项仍由绝对一致收敛的级数给出零均值。当 \(|\alpha|=1\) 时先旋转到 \(\alpha=1\)。对 \(1/2\le r<1\)， \[
+ 2\sin^2(t/2)\le |e^{it}-r|^2=(1-r)^2+4r\sin^2(t/2)\le4 .
+\] 在 \([-\pi,\pi]\) 上 \(|\sin(t/2)|\ge |t|/\pi\)，故对数的负部有可积控制函数 \(\mathrm{const}+|\log|t||\)。支配收敛给出边界上的均值也为零。于是对根求和得 \(\langle\log|f|\rangle=\log\mathcal M(f)\le\log\mathcal L(f)\)。另一个方向来自 \(1+|\alpha_i|\le2B_i\)，这就证明了 \hyperref[eq:3]{(3)}。
+
+令 \(X=\log\mathcal L(f)\)。要排除高度无限增大的反例，可以先选一个子列，使实际次数 \(e\) 固定。对每个根计算 \(u_i=X^{-1}\log^+(B_i/|\pi-\alpha_i|)\)，其中 \(\log^+x=\max(0,\log x)\)，再从大到小排列。这样，特别大的根不会仅因其模很大就被算作好逼近。再取子列，可以假设每个 \(u_i\) 都有极限 \(c_i\in[0,+\infty]\)。我们得到
+
+\[
+ \lim \frac{-\log|f(\pi)|}{X}=\sum_{i=1}^e c_i-1,\qquad
+ \sum_{i=2}^e(i-1)c_i\le e-1.                                          \tag{4}\label{eq:4}
+\]
+
+以二次式 \(aY^2+bY+c\) 为例，判别式 \(b^2-4ac=a^2(\alpha_1-\alpha_2)^2\) 是整数。在首项系数一定时，两根不能任意靠拢而又保持这个整数非零。下面的论证把这种限制和各根到 \(\pi\) 的距离结合起来，其代价由 \(\mathcal M(f)\) 衡量。
+
+第一式中的减一从何而来？把 \(|f(\pi)|\) 写成 \(\mathcal M(f)\prod_i|\pi-\alpha_i|/B_i\)。由 \hyperref[eq:3]{(3)}，\(\log\mathcal M(f)\) 与 \(X\) 只差有界量，而每个 \(|\pi-\alpha_i|/B_i\le 1+\pi\)，用 \(\log^+\) 截掉的量也有界。取对数、除以 \(X\)，便出现了这个减一。
+
+若记 \(r_i=|\pi-\alpha_i|/B_i\)，则 \(0<r_i\le1+\pi\) 且 \(\log r_i=-Xu_i+\max(0,\log r_i)\)。最后一项始终有界。因而用 \(\log\mathcal M(f)=X+O_d(1)\) 代入根乘积，式 \hyperref[eq:4]{(4)} 的第一式便包括 \(c_1=+\infty\) 的情形。选取子列时可把 \(u\) 映到紧区间上的 \(u/(1+u)\)，再对有限多个根逐一选取。
+
+第二式把``其他根也很接近''的程度限制住了。特征为零时不可约多项式没有重根，所以它的判别式是非零整数。将判别式的根乘积公式开绝对值平方根，得到
+
+\[
+ 1\le |\operatorname{disc} f|^{1/2}
+   =\mathcal M(f)^{e-1}\prod_{i<j}\frac{|\alpha_i-\alpha_j|}{B_iB_j}.
+\]
+
+当 \(i<j\) 时，把 \(\alpha_i-\alpha_j\) 沿 \(\pi\) 拆成两段，由三角不等式可知每个归一化的根差至多是 \(2(1+\pi)e^{-Xu_j}\)。第二个根进入乘积一次，第三个进入两次，依此类推。取对数便得到 \hyperref[eq:4]{(4)} 的权重 \(i-1\)。对一个恰好二次的不可约多项式，这一条就是 \(c_2\le1\)。对一个恰好三次的则为 \(c_2+2c_3\le2\)。特别地，\(y=\sum_{i>1}c_i\le e-1\)。若排在第一的根不是实数，它的共轭根到 \(\pi\) 的距离相同，此时 \(c_1=c_2\)，从而 \(\sum c_i-1\le 2e-3\)。可取子列使第一根的实性固定。所以任何可能违反 \hyperref[eq:1]{(1)} 的序列都必须有一个趋向 \(\pi\) 的实根。即使 \(c_1=+\infty\)，后文只要用它的一个有限下界。
+
+具体地，\(r_i\le(1+\pi)e^{-Xu_i}\)，所以 \(i<j\) 时有 \[
+ \frac{|\alpha_i-\alpha_j|}{B_iB_j}
+ \le r_i/B_j+r_j/B_i\le 2(1+\pi)e^{-Xu_j}.
+\] 指标 \(j\) 恰被计入 \(j-1\) 次。若最接近的根非实，共轭根有同一归一化距离，于是 \(c_1=c_2\le e-1\)，而 \(\sum_{i>1}c_i\le e-1\)，总值指数至多 \(2e-3\)。另外当 \(|\alpha|\ge 2\pi+2\) 时，归一化距离至少为 \(1/2\)，故正的接近指数先迫使根有界，再迫使根趋于 \(\pi\)。
+
+\textbf{为什么取结式？} 小的复数可以任意接近零，非零整数却做不到。高斯整数 \(a+ib\)（\(a,b\) 为整数）也有这个性质，因为它的模平方是正整数。选定上述实根后，\(\mathbb Q(\alpha_1)\) 是实数域，加入 \(i\) 使扩张次数恰好乘二。用域扩张的塔式公式，\([\mathbb Q(i,\alpha_1):\mathbb Q(i)]=e\)，于是 \(f\) 在 \(\mathbb Q(i)\) 上仍不可约。如果一个高斯整系数多项式 \(R\) 在 \(\alpha_1\) 处非零，那么它与 \(f\) 互素。将它们的结式写成乘积，就是
+
+\[
+ 1\le|\operatorname{Res}(f,R)|
+ =|a|^{\deg R}\prod_{i=1}^e |R(\alpha_i)|
+ =\mathcal M(f)^{\deg R}\prod_{i=1}^e
+               \frac{|R(\alpha_i)|}{B_i^{\deg R}}.                         \tag{5}\label{eq:5}
+\]
+
+不熟悉结式的读者可以把它看成一个普通矩阵的行列式。取 \(\deg U<\deg R,\deg V<e\)，把系数向量 \((U,V)\) 映为 \(Uf+VR\) 的系数向量。矩阵条目都是原来的系数。互素性使它的核为零，否则 \(f\mid VR\) 将迫使 \(f\mid V\)。为何行列式又等于右边的乘积？把输出按除以 \(f\) 的商和余式分组，商部分从最高次向下消元，贡献首项系数的 \(\deg R\) 次方。余式部分是模 \(f\) 的乘法 \(V\mapsto VR\)。用 \(V(\alpha_i)\) 作坐标（根互异，Vandermonde 矩阵可逆），这个乘法变为对角矩阵，对角元恰是 \(R(\alpha_i)\)。取绝对值便是 \hyperref[eq:5]{(5)}。因此下面各根处的估计必须作用于同一个 \(R\)。
+
+\textbf{Sylvester 矩阵的两个对角块。} 令 \(r=\deg R\)，在次数 \(<e+r\) 的目标空间中取基 \[
+ 1,Y,\ldots,Y^{e-1},f,Yf,\ldots,Y^{r-1}f.
+\] 这组基到普通幂基的矩阵为三角形，行列式是 \(a^r\)。把源空间变量排成 \((V,U)\)。多项式除法把 \(VR+Uf\) 分成模 \(f\) 的余式和 \(f\) 的倍式；对角块分别为``在余式空间上乘 \(R\) 后模 \(f\)''与 \(r\) 维单位阵。余式在 \(e\) 个不同根处的取值可唯一确定余式，这就是次数 \(<e\) 的插值。在这些取值坐标下，第一块为对角阵，元素为 \(R(\alpha_i)\)。乘回换基行列式便得到 \hyperref[eq:5]{(5)}，\(r=0\) 时第二块为空也成立。若某一共轭根是 \(R\) 的根，则其在 \(\mathbb Q(i)\) 上的极小多项式就是 \(f\) 的首一化，因而 \(R(\alpha_1)=0\)，与选行相矛盾。
+
+这也补出判别式的整数性。令第二个多项式为 \(f'\)，代入 \(f'(\alpha_i)=a\prod_{j\ne i}(\alpha_i-\alpha_j)\)，所得结式等于带符号的 \(a\operatorname{disc}(f)\)。把系数暂看成不定元，Sylvester 矩阵在 \(a=0\) 时最高次系数这一行全为零（两首项系数是 \(a,ea\)）。所以这个整系数行列式多项式可在整系数环中除以 \(a\)，再代入原系数仍是整数。不可约多项式与次数较低的导数互素，故判别式非零。一次式的判别式按空乘积取一。
+
+\Needspace{5\baselineskip}
+\section{3. 怎样保证辅助多项式在指定根处非零}\label{ux600eux6837ux4fddux8bc1ux8f85ux52a9ux591aux9879ux5f0fux5728ux6307ux5b9aux6839ux5904ux975eux96f6}
+
+只证明一个多项式在某处不恒为零是不够的，我们需要它在事先指定的根处非零。先把所有候选行堆成高矩阵，再从中选方阵。后面要用普通 Vandermonde 行列式，所以在每个节点留下的行还必须从零阶连续排列。
+
+设有若干层 \(j=0,\ldots,T\)。第 \(j\) 层取整数频率 \(-U_j\le t\le U_j\)，其中 \(U_j=\lfloor u_j N\rfloor\)，\(1=u_0\ge\cdots\ge u_T>0\)。这样，只要 \((t,j)\) 存在，较低层 \((t,j-1)\) 也存在。每个 \((t,j)\) 给矩阵贡献一列。整数节点 \(v=-V,\ldots,V\) 则各贡献若干行，\(a_v>0\) 表示希望在该节点取多少行的比例。选取 \(L=\sum_v a_v=2\sum_j u_j\)，于是列总数 \(n=\sum_j(2U_j+1)=LN+O(1)\)。参数稍后在第 8 节给出。令 \(Z=iY/2\)，在节点 \(v\)、导数阶 \(\sigma\) 的行填入
+
+\[
+ A_{v,\sigma;t,j}(Y)=2^j i^{vt}(\partial_t+vZ)^j p_\sigma(t),\qquad
+ p_\sigma(t)=t^\sigma/\sigma! .                                           \tag{6}\label{eq:6}
+\]
+
+\(\partial_t\) 表示先对多项式求导，再代入整数 \(t\)。在同一节点上，只取从零阶开始的连续各行 \(0,\ldots,m_v-1\)，称为\textbf{前缀}。保留这个连续性使以下换基成为可能。只要新行多项式的次数仍为 \(\sigma\)、首项仍是 \(t^\sigma/\sigma!\)，它和旧行之差就由较早各行组成，行列式的值完全相同。
+
+可以先看一个二行二列的子矩阵。取节点 \(v=0,1\) 的零阶行，取频率 \(t=0\) 的 \(j=0,1\) 两列。由 \hyperref[eq:6]{(6)}，矩阵恰为 \(\bigl(\begin{smallmatrix}1&0\\1&iY\end{smallmatrix}\bigr)\)，行列式为 \(iY\)。这个小例子显示了``条目是多项式''\,``在指定非零点仍能非零''的具体含义。真正的困难是让这一点在行列数一起增大、每个节点还要有指定行数时继续成立。
+
+\textbf{引理 3.1（选行）}　把节点按除以四的余数分组。每组取最大的 \(J+1\) 个 \(a_v\)（组短就全取），把四组所取数之和记为 \(B_J\)。如果对 \(0\le J\le T\) 都有 \(B_J\ge2\sum_{j=0}^J u_j\)，那么给定任何 \(\xi\ne0\)，都能选出总共 \(n\) 行，使每个节点恰选一个前缀，\(m_v=a_vN+O(1)\)，方阵行列式 \(R^0\) 满足 \(R^0(\xi)\ne0\)。误差界与 \(\xi\) 无关。
+
+\textbf{证明。} 先让每个点提供 \(h_v=\lfloor a_vN\rfloor+T+2\) 行。假如列相关，把列关系的系数当作 \(y^t z^j\) 的系数，就组成一个非零表达式 \(P(y,z)=\sum_{j=0}^JP_j(y)z^j\)，其中 \(P_J\ne0\)，\(P_j(y)\) 只含从 \(-U_j\) 到 \(U_j\) 的整数幂。这类允许负整数幂的式子叫作 Laurent 多项式。由 \hyperref[eq:6]{(6)}，在 \(Z=i\xi/2\) 时，\(P(i^ve^w,w+vZ)\) 在 \(w=0\) 至少有 \(h_v\) 阶零点。检验这一点只要展开 \((w+vZ)^je^{tw}\)。其 \(w^\sigma\) 项正是 \((\partial_t+vZ)^jp_\sigma(t)\)。列前的 \(2^j\) 可并入列系数。
+
+沿曲线用 \(w\) 作局部参数。因为 \(e^{tw}=\sum_{\sigma\ge0}p_\sigma(t)w^\sigma\) 且 \(\partial_t e^{tw}=we^{tw}\)，在等式两边施加 \((\partial_t+vZ)^j\) 后，\(w^\sigma\) 系数正是第 \(\sigma\) 行中的表达式。取线性关系的系数，按列吸收 \(2^j\)，就得到 Laurent 多项式 \(P\)。函数在一点的消失阶数是首个非零 Taylor 系数的指标，因此 \(h_v\) 条行方程恰好消去了 \(0,\ldots,h_v-1\) 阶系数。
+
+这意味着一个非零的有限表达式要同时满足很多消失条件。为精确计数，令 \(\delta=y\partial_y+\partial_z\)，构造导数行列式
+
+\[
+ W(y,z)=\det\big(\delta^r\partial_z^k P(y,z)\big)_{0\le r,k\le J}.
+\]
+
+把 \(z\) 换成 \(z+c\)，Taylor 公式把第 \(k\) 列改成它自己加上后面若干列的倍数，且该平移与 \(\delta\) 可交换。行列式保持不变，所以 \(W\) 实际只依赖 \(y\)。第 \(k\) 列只涉及 \(j\ge k\) 的频带，其指数在 \([-U_k,U_k]\) 中。因而 \(W\) 的最大指数减最小指数（称为宽度）至多为 \(2\sum_{k=0}^J U_k\)。
+
+把列写成 \(C_k(z)\)。由于 \(\delta\) 和 \(\partial_z\) 可交换，且次数为 \(J-k\) 的 Taylor 和是有限和， \[
+ C_k(z+c)=\sum_{m=0}^{J-k}C_{k+m}(z)c^m/m!.
+\] 右乘矩阵的对角元全为一，所以 \(W(y,z+c)=W(y,z)\)，逐点取 \(c=-z\) 即知它只依赖于 \(y\)。微分 \(\partial_z^k\) 只保留 \(j\ge k\) 的层，它们全在 \([-U_k,U_k]\) 内。\(\delta\) 不改变 \(y\) 的指数。每个行列式乘积中各取一列，对所有 \(k\) 加起来，倍乘 \(y^{\sum_kU_k}\) 后便成次数至多 \(2\sum_k U_k\) 的普通多项式。
+
+还需证明 \(W\) 非零。在某个对数分支上令 \(z=\log y\)，各函数 \((\partial_z^kP)(y,\log y)\) 对常数线性无关。否则，非平凡组合中最高的 \(\log y\) 次幂有一个非零的 Laurent 多项式系数。固定一个该系数非零的 \(y\)，绕原点多圈，每圈使对数增加 \(2\pi i\)。一个非零的一元多项式就有了无穷多个根，这是矛盾。线性无关的解析函数，其普通导数行列式（Wronskian）不恒为零。用列消元使各 Taylor 展开的首项阶数互异，这时首项系数的行列式是这些阶数的 Vandermonde 乘非零因子。把普通导数换成 \(y\,d/dy\)，在 \(y\ne0\) 的局部也只多出非零因子。此处沿对数分支的 \(y\,d/dy\) 正是 \(\delta\)。
+
+若存在常系数关系，取最小的非零系数指标 \(k_0\)。\((\log y)^{J-k_0}\) 的系数是非零 Laurent 多项式 \(b_{k_0}J!P_J(y)/(J-k_0)!\)。选一个使它不为零的基点。每绕原点一圈，Laurent 系数回到原值，\(\log y\) 增加 \(2\pi i\)。零函数的解析延拓仍为零，这就迫使同一个非零一元多项式在无限多个不同值上为零。
+
+Wronskian 是以函数为列、依次求导为行的行列式。对独立的解析函数芽逐列消去最低 Taylor 系数，可换基为首项 \(b_jw^{d_j}\)，其中 \(d_0<\cdots<d_J\)。导数行列式在 \(\sum d_j-J(J+1)/2\) 阶的系数是 \[
+ \left(\prod_j b_j\right)\det((d_j)_{\underline r})
+ =\left(\prod_j b_j\right)\prod_{j<k}(d_k-d_j)\ne0 .
+\] 这里 \((d)_{\underline r}=d(d-1)\cdots(d-r+1)\) 是次数 \(r\) 的首一多项式，故其行可由普通幂行三角变换得到。在 \(y=y_0e^w,z=\log y_0+w\) 上，沿 \(w\) 求导恰是 \(\delta\)。这就证明了所取 \(W\) 非零。
+
+现在逐个看四个点 \(y=i^r\)，并令 \(y=i^r e^w\)。某一余数类中，每个被选的 \(v\) 对应于上面各列的一个组合，系数是 \(((vZ)^k/k!)_{k=0}^{J}\)。只要不超过 \(J+1\) 个，这些向量线性无关，因为 \(Z\ne0\)、各 \(v\) 互异。把它们补成一组基。原函数有 \(h_v\) 阶零，至多取 \(J\) 次导数后至少还剩 \((h_v-J)_+\) 阶，这里 \(x_+=\max(x,0)\)。在四个互异点把重数相加，超过了 \(NB_J\)，因而超过 \(W\) 的宽度。乘一个 \(y\) 的幂可把 \(W\) 变成宽度这么多次的非零普通多项式，它不可能有这么多零点。这就证明矩形候选矩阵满列秩。
+
+在相位 \(i^r\) 处取基函数 \(F_k(w)=(\partial_z^kP)(i^re^w,w)\)。同余节点 \(v\) 给出的函数正是 \(\sum_k(vZ)^k F_k(w)/k!\)。取该余数类中的 \(s'\le J+1\) 个不同节点，相应系数向量的前 \(s'\) 个分量构成按阶乘缩放的 Vandermonde 矩阵。因 \(Z\ne0\)，其行列式非零，故可把这 \(s'\) 个线性组合同时补成常数列基。每一新列的原函数在 \(0\) 处至少有 \(h_v\) 阶零点，求导最多 \(J\) 次后仍至少有 \((h_v-J)_+\) 阶。每个排列都用到所有这些列，每列的阶数都可相加。因 \(dy/dw=i^r\ne0\)，这也是 \(W\) 在 \(y=i^r\) 的重数下界。每类取质量最大的至多 \(J+1\) 个节点，\(h_v-J=\lfloor a_vN\rfloor+T+2-J>a_vN\)；四个相位不同，合计重数严格超过 \(NB_J\ge2\sum_k U_k\)，与非零性和次数界矛盾。
+
+最后要确保挑出来的行没有``跳阶''。暂用 \(t^\sigma\) 作行基，按 \(\sigma-\lfloor a_vN\rfloor\) 递增扫描，相同键值总按同一节点次序。每当新行不依赖前面的行就保留。行多项式乘 \(t\) 等于在右边乘一个与节点无关的矩阵，原因是
+
+\[
+ (\partial_t+vZ)^j(tp)=t(\partial_t+vZ)^jp+j(\partial_t+vZ)^{j-1}p .
+\]
+
+\(j>0\) 时所用的 \((t,j-1)\) 列一定存在。因此一旦某一行是前面行的组合，它的下一阶也是先前各行提升一阶后的组合。提升一阶保留扫描的先后次序。可把扫描想成无限进行，到秩满 \(n\) 就停。上述候选行在一个共同的截止键值之前，已足以满秩，所以不会有哪个节点在跳过某一阶后再度入选。候选行总数只比 \(n\) 多 \(O(1)\) 个，得到 \(m_v=a_vN+O(1)\)。恢复 \(\sigma!\) 的归一化保持非零性。引理得证。
+
+把未作阶乘归一化的行写成 \(r_{v,\sigma}\)，保留原来的 \(2^j\)。同一个右乘矩阵 \(M\) 对任意行向量 \(r\) 的作用为 \[
+ (rM)_{t,j}=t\,r_{t,j}+2j\,r_{t,j-1}.
+\] \(j=0\) 时第二项为零。相位相同，且频带嵌套保证所用的列存在，所以 \(r_{v,\sigma+1}=r_{v,\sigma}M\)。若扫描到某行时它是更早诸行的线性组合，等式两边右乘 \(M\)，其后继便是那些更早行的后继的组合。所有排序键同时加一，固定的节点平局顺序也不变，故这些后继仍在当前后继之前。即使其中有行也曾被跳过，它仍在更早保留行的张成空间里。归纳便得到在一个节点首次跳过后不会再选到更高阶行。扫描到公共终止键 \(T+1\) 时，总候选数仅比 \(n\) 多 \(O(1)\)，而秩已经是 \(n\)。于是各节点与其候选前缀相差至多 \(O(1)\) 行，常数与 \(\xi\) 无关。
+
+\Needspace{5\baselineskip}
+\section{4. 给辅助多项式清分母、压低次数}\label{ux7ed9ux8f85ux52a9ux591aux9879ux5f0fux6e05ux5206ux6bcdux538bux4f4eux6b21ux6570}
+
+式 \hyperref[eq:5]{(5)} 中，每增加一次 \(\deg R\) 都要支付 \(\log\mathcal M(f)\)；乘进的分母倍数则作用于每个共轭根。本节上下两端分别压低次数，再在每个素数处计算清分母代价。证明时可以为同一批前缀行选不同的基，因为替换成同次数、同首项的多项式只作对角元为一的三角变换。
+
+对每个模四余数类，按 \(m_v\) 递减排列，依次标号 \(q_v=0,1,\ldots\)。在极限中可以按 \(a_v\) 排列，等大的两项交换不会影响加权和。记
+
+\[
+ \bar j=\frac{2\sum_j ju_j}{L},\qquad \bar q=\frac{\sum_v q_va_v}{L},
+ \qquad s=\frac{\sum_v a_v^2}{2L},\qquad b_j=\frac{u_j}{2}.                \tag{7}\label{eq:7}
+\]
+
+\textbf{引理 4.1（次数）}　\(R^0\) 含有公共因子 \(Y^{L_0}\)，其中 \(L_0=\sum_vq_vm_v\)。下式中 \(\zeta\) 遍历 \(\{0,u_0,\ldots,u_T\}\)。定义
+
+\[
+ \rho(\zeta)=-1+\frac{2\sum_j\min(\zeta,u_j)+
+                   \sum_{v=-V}^{V}\sum_{k\ge0}(a_v-2\zeta-2k)_+}{L},
+ \qquad D=\bar j-\bar q-\max_\zeta\rho(\zeta).                             \tag{8}\label{eq:8}
+\]
+
+对 \(k\) 的求和只有有限项为正。那么 \(\deg(R^0/Y^{L_0})\le n(D+o(1))\)。
+
+\textbf{证明。} 先看原点。同阶且模四同余的行，在任意一列有相同相位 \(i^{vt}\)。在这些行上作 Newton 差商。具体说，对于节点 \(v_0,\ldots,v_q\)，\(q\) 阶差商是 \(\sum_{h=0}^qg(v_h)/\prod_{r\ne h}(v_h-v_r)\)，等于插值多项式的最高次项系数，所以能消去次数低于 \(q\) 的一切项。在第 \hyperref[eq:6]{(6)} 式中，提出共同相位后，每个 \(v^h\) 都伴随着 \(Y^h\)。改用各自的 \(q_v\) 阶差商后，这行就含因子 \(Y^{q_v}\)。前缀和排序保证所需的前面各行确实存在。行变换的行列式是非零常数，故这些因子合起来就给出了 \(Y^{L_0}\)。
+
+在 \(v_0,\ldots,v_q\) 上的插值多项式为 \(\sum_h g(v_h)\prod_{r\ne h}(v-v_r)/(v_h-v_r)\)。其 \(v^q\) 系数就是所用的差商，所以当 \(g(v)=v^k\) 且 \(k<q\) 时该系数必为零。把节点按前缀长度递减排列后，作差商所需的所有先前节点都有同一阶 \(\sigma\) 的行。变换的对角元是 \(1/\prod_{r<q}(v_q-v_r)\)，为非零常数。提出共同相位后，原项含有 \[
+ 2^j\binom jh v^h(iY/2)^h p_\sigma^{(j-h)}(t).
+\] \(h<q\) 的项消失，其余均被 \(Y^q\) 整除。举例取同余节点 \(0,4\) 和 \(j=1\)，两行对应的项为 \(2p'_\sigma(t)\) 与 \(2p'_\sigma(t)+8Zp_\sigma(t)\)；一阶差商除以 \(4\) 后只剩 \(2Zp_\sigma(t)\)。对每个节点的每一行取出因子即得 \(L_0\)。
+
+再看最高次。固定 \(\zeta\)，记 \(H_0=2U_0+1\)，\(H_\zeta=2\lfloor\zeta N\rfloor+1\)，置 \(r_\sigma=\lfloor(\sigma-H_\zeta)/H_0\rfloor\)。当 \(r_\sigma\ge0\) 时，对新的第 \(\sigma\) 阶行多项式这样指定整数零点。每个外层频率重数为 \(r_\sigma\)，\(|t|\le\zeta N\) 的重数再加一。所用总次数不超过 \(\sigma\)，所以能乘一个单项式并调整首项系数，补足所需次数。当 \(r_\sigma=-1\) 时不指定零点。于是任何非零条目都需对行多项式至少求 \(r_\sigma+\mathbf1_{|t|\le\zeta N}\) 次导数。每求一次，\hyperref[eq:6]{(6)} 中可能的 \(Y\) 次数就少一次。行列式每个排列都恰用一遍各行各列。列指标函数的平均趋于 \(2\sum_j\min(\zeta,u_j)/L\)。要算 \(r_\sigma\) 的平均，只须数满足 \(\sigma\ge H_\zeta+kH_0\) 的行数，得到 \(-1+L^{-1}\sum_v\sum_{k\ge0}(a_v-2\zeta-2k)_+\)。再扣去原点处的公共次数便得 \hyperref[eq:8]{(8)}。
+
+实际可取的行多项式是各整数频率处的 \((t-t_0)\) 按指定重数的乘积，再乘一个 \(t\) 的幂补足次数，最后除以 \(\sigma!\)。因为 \(r_\sigma H_0+H_\zeta\le\sigma\)，这确实可行。若 \(r_\sigma=-1\)，声称的损失为 \(-1\) 或 \(0\)，不施加零点也成立。每列每求一次行多项式的导数，就少一次本可出现的 \(Y\)。对一个非零排列，用到每一行、每一列各一次。为算出总损失，写 \[
+ r_\sigma=-1+\sum_{k\ge0}{\bf1}_{\{\sigma\ge H_\zeta+kH_0\}}.
+\] 在长度 \(m_v\) 的前缀中，右边第 \(k\) 项出现 \((m_v-H_\zeta-kH_0)_+\) 次。除以 \(n\) 并用 \(H_0/N\to2,\ H_\zeta/N\to2\zeta\)，得 \hyperref[eq:8]{(8)} 的双和。每层满足中心指示条件的列数为 \(2\min(U_j,\lfloor\zeta N\rfloor)+1\)。初始平均次数为 \(\bar j\)，去原点因子的损失趋于 \(\bar q\)，再减去各候选 \(\zeta\) 中最大的损失即得 \(D\)。
+
+\textbf{引理 4.2（分母）}　可取正整数 \(B_N\)，使 \(R=B_NR^0/Y^{L_0}\) 具有高斯整数系数，且 \(\log B_N\le (G+o(1))nN\)。先用下式给出一个可行的 \(G\)，随后在第 4.3 节用同余差因子收紧这个上界。令 \(A=\max(\max a_v,\max b_j)\)，分别取 \(\eta=1/30,1/24\)，对 \(y\ge\eta\) 定义
+
+\[
+ \begin{aligned}
+ R_h(y)&=L^{-1}\sum_v(a_v-(h-q_v)_+y)_+,&
+ C_h(y)&=4L^{-1}\sum_j(b_j-(h-j)_+y)_+,\\
+ F_\eta(x)&=\sum_{m\ge1}\frac{(x-m\eta)_+^2}{2m}.&&
+ \end{aligned}
+\] \[
+ \begin{aligned}
+ G_\eta={}&\eta(\bar j-\bar q)+
+ \frac{\sum_v F_\eta(a_v)-4\sum_j F_\eta(b_j)}{L}\\
+ &-\sum_{h\ge1}\int_\eta^{A}(R_h(y)-C_h(y))_+\,dy,\qquad
+ G=\min(G_{1/30},G_{1/24}).
+ \end{aligned}\tag{9}\label{eq:9}
+\]
+
+\textbf{整值多项式与前向有限差分。} 称有理系数多项式整值，若它在每个整数处的值都是整数。例如 \(t(t-1)/2\) 整值。基 \(\binom tr=(t)_{\underline r}/r!\) 在负整数 \(-m\) 处等于 \((-1)^r\binom{m+r-1}r\)。令 \(\Delta p(t)=p(t+1)-p(t)\)，即前向有限差分（forward finite difference）。Pascal 恒等式给出 \(\Delta\binom tr=\binom t{r-1}\)。在这个基下第 \(r\) 个系数正是 \(\Delta^r p(0)\)，故整值多项式有整数的基系数。对一个非零有理数，\(v_p\) 是分子中 \(p\) 的次数减去分母中的次数。称 \(p\)-整是说 \(v_p\ge0\)，也允许系数为零；对高斯有理数在实部、虚部分别作此检验。
+
+\textbf{证明。} 一个分数要乘多少才能成为整数，可以分别问每个素数 \(p\) 在分母中最多出现几次。对高斯有理数，实部和虚部一起这样处理。记 \(S=\max m_v+2U_0+2\)。先处理 \(p\le\sqrt S\)。改用行基 \(\binom t\sigma\)。对次数至多 \(S\) 的多项式，令 \(\Delta p(t)=p(t+1)-p(t)\)，平移的 Taylor 公式给出 \(1+\Delta=\exp(\partial_t)\)。由于求导和差分重复足够多次都会消失，取对数得到有限和 \(\partial_t=\sum_{k=1}^S(-1)^{k-1}\Delta^k/k\)。整值多项式的差分仍整值，所以每求一次导数至多付出 \(\lfloor\log_p S\rfloor\) 个 \(p\)。原列中 \(2^j\) 同时处理了 \(Z=iY/2\)。小素数总的对数代价至多 \(O_T(n\sqrt S\log^2 S)\)，除以 \(nN\) 后趋于零。
+
+在次数至多 \(S\) 的空间里，\(\partial_t\) 与 \(\Delta\) 的 \(S+1\) 次幂均为零。Taylor 展开给出 \(\exp(\partial_t)p(t)=p(t+1)\)。把有限幂零算子代入互逆的形式幂级数，得到精确等式 \[
+ \partial_t=\log(1+\Delta)=\sum_{k=1}^{S}(-1)^{k-1}\Delta^k/k .
+\] 所以乘上 \(\operatorname{lcm}(1,\ldots,S)\) 后求导保持整值性。求 \(r\) 次导数需要的 \(p\) 次数至多 \(r\lfloor\log_p S\rfloor\)。式 \hyperref[eq:6]{(6)} 中 \(r\le j\le T\)，因子 \(2^j\) 已经清除了 \(Z=iY/2\) 带来的二的分母。对小素数，按行和按素数取这个粗界的总成本除以 \(nN\) 后趋零。对大素数继续这样估计将损失主要项，这才换用按四步平移设计的基。
+
+这里按素数的幂计算分母代价。例如 \(12\) 能清除 \(1/3\) 和 \(1/4\) 两个分母，因为在素数 \(2\) 处支付了两次，在素数 \(3\) 处支付了一次。如果两项要相加，只需对每个素数取最大需求。如果要相乘，需求相加。行列式是许多乘积的和，下面正是先给每个乘积付款，再选对所有乘积都足够的统一界。
+
+对较大素数，换用首项相同的 \(4^\sigma\binom{(t+U_0)/4}{\sigma}\)。固定层 \(j\) 和余数 \(l\)，把这一组整数频率的起点记作 \(t_{jl}\)，按 \((t-t_{jl})/4\) 作各阶前向差分。这个列变换的行列式是一。因为频率增加四时生成函数 \((1+x)^{(t+U_0)/4}\) 多乘一个 \(1+x\)，作一次差分就多乘一个 \(x\)。于是除去与 \(p\) 互素的因子，新的条目为
+
+\[
+ [x^{\sigma-k}](1+x)^{(t_{jl}+U_0)/4}
+        \big(vZ+\tfrac14\log(1+x)\big)^j .                               \tag{10}\label{eq:10}
+\]
+
+为什么有理幂 \((1+x)^\lambda\) 的系数不会带来奇素数分母？这里 \(4\lambda\) 是整数。考察第 \(r\) 个系数 \(\binom{\lambda}{r}\)，记 \(e\) 为 \(r!\) 中 \(p\) 的指数。由于四与 \(p\) 互素，可取整数 \(m\ge r\) 使 \(4m\equiv4\lambda\pmod{p^{e+1}}\)。在这个模数下，两组下降乘积 \(m(m-1)\cdots(m-r+1)\) 与 \(\lambda(\lambda-1)\cdots(\lambda-r+1)\) 同余。第一组等于 \(r!\binom mr\)，含有至少 \(e\) 个 \(p\)。所以第二组除以 \(r!\) 后分母也不会含 \(p\)。再做前面的行差商，\(v\) 次数低于 \(q_v\) 的项消失，剩下至多 \(j-q_v\) 个对数因子。节点差是固定整数，对这里的大素数都可逆。因为 \(p^2>S\)，\(\log(1+x)\) 在所需的阶数内每项至多带一个 \(p\) 分母，而带有 \(p\) 的项至少占用 \(p\) 个 \(x\) 次数。非零条目要求 \(\sigma\ge k,\ j\ge q_v\)。它所需的 \(p\) 指数因而至多为
+
+在固定列类中，列 \(k\) 被替换为 \(\sum_{a=0}^k(-1)^{k-a}\binom ka C_a\)，\(C_a\) 为第 \(a\) 个原列；变换为单位三角形。频率从 \(t\) 到 \(t+4\)，生成函数多乘 \((1+x)\)，故作一次差分就多一个 \(x\)。对 \(t\) 求导则多乘 \(\log(1+x)/4\)。这解释了 \hyperref[eq:10]{(10)} 中的 \(\sigma-k\) 和四分之一。从分母看，\(\binom{1/4}{3}=7/128\) 中的三被消去，而 \([x^3]\log(1+x)=1/3\) 中的三仍在。一般地，取 \(4m\equiv4\lambda\bmod p^{v_p(r!)+1}\)，逐因子比较两个下降乘积后可除以 \(r!\)，证明有理幂系数 \(p\)-整。对数的系数在次数 \(a\) 是 \(\pm1/a\)。由于 \(a\le S<p^2\)，一个坏系数至多花一个 \(p\)，且至少占用 \(p\) 个次数。除掉低 \(v\) 次幂后只剩至多 \(j-q_v\) 个对数因子，并且 \[
+ \left\lfloor\frac{\sigma-k}{p}\right\rfloor
+ \le \left\lfloor\frac{\sigma}{p}\right\rfloor-\left\lfloor\frac{k}{p}\right\rfloor .
+\] 两项上界作用于同一条非零条目。
+
+\[
+ \min\big(j-q_v,\ \lfloor\sigma/p\rfloor-\lfloor k/p\rfloor\big).
+\]
+
+把第一项按一个排列求和，得 \(\sum_{\rm col}j-\sum_{\rm row}q_v\)。如果从第二项之和起算，还可以保证至少省去
+
+\[
+ E_p=\sum_{h\ge1}
+ \big(\#\{\text{rows}:\lfloor\sigma/p\rfloor+q_v\ge h\}
+       -\#\{\text{columns}: j+\lfloor k/p\rfloor\ge h\}\big)_+ .          \tag{11}\label{eq:11}
+\]
+
+这是因为每一对行列上，两种上界之差能省下的量是两个整数层级之差的正部。固定高度 \(h\)，如果层级达到 \(h\) 的行比相应的列多，多出来的每一行都必须配给低于该层的列。在 \(h\) 上相加就得到 \hyperref[eq:11]{(11)}。同一估计适用于行列式所有系数。恢复原行列式时只需乘固定节点差的积，不会增加大素数的分母。
+
+为核对节省的方向，令 \(A=\lfloor\sigma/p\rfloor,\ K=\lfloor k/p\rfloor\)。相对于 \(A-K\)，每次配对至少节省 \[
+ (A-K)-\min(A-K,j-q_v)=((A+q_v)-(K+j))_+ .
+\] 整数层级 \(r,s\) 的 \((r-s)_+\) 恰数出满足 \(r\ge h>s\) 的整数高度。例如行层级为 \(3,1\)，列层级为 \(2,0\)。高度 \(3\) 强迫一次跨越，高度 \(2\) 不强迫，高度 \(1\) 又强迫一次。配 \(3\) 对 \(2\)、\(1\) 对 \(0\) 时节省 \(2\)，反向配对时节省 \(3\)。我们只减去每个匹配都保证的 \(2\)。这个计数不涉及第 6 节扰动的列标签。
+
+在 \(\sqrt S<p\le\eta N\) 用第一种上界。由素数定理 \(\vartheta(x)=\sum_{p\le x}\log p=x+o(x)\) {[}3{]}，这一段贡献 \hyperref[eq:9]{(9)} 的第一项。对 \(p/N=y\ge\eta\)，把 \hyperref[eq:11]{(11)} 中的行、列数除以 \(n\)，分别得到 \(R_h(y)+O(1/N)\) 和 \(C_h(y)+O(1/N)\)。第 \(j\) 层每个余数类有 \(b_jN+O(1)\) 个连续差分，故有因子四。只有有界多个 \(h\) 需要计入。再看未扣除 \hyperref[eq:11]{(11)} 的底数：长度为 \(xN+O(1)\) 的行前缀上，\(\lfloor\sigma/p\rfloor\) 的和除以 \(n\) 是 \(L^{-1}\sum_{m\ge1}(x-my)_++O(1/N)\)。从 \(\eta\) 到 \(A\) 积分，正好是 \(F_\eta(x)/L\)。对列同理并作减法。这里从素数和换为积分，是先在一个固定区间应用素数定理，再用阶梯函数逼近连续分段线性函数。\(p>AN+O(1)\) 时相应分母代价为零。把各素数按所得的非负整数指数相乘，就得到同时清除全部系数分母的 \(B_N\)。
+
+\textbf{从加权素数和到普通积分。} 附录 B.2 证明所需的切比雪夫形式 \(\vartheta(x)=x+o(x)\)。对固定 \(0\le l<r\)， \[
+ \frac1N\sum_{lN<p\le rN}\log p
+ =\frac{\vartheta(rN)-\vartheta(lN)}N\longrightarrow r-l .
+\] 若被加权函数在闭区间 \([\eta,A]\) 上连续且分段仿射，先固定一个有限划分，在每格分别用最大值和最小值界住加权和。先令 \(N\to\infty\)，每格权重趋于格长；再令最大格长趋于零，一致连续性使上下和具有同一极限。函数值的统一 \(O(1/N)\) 误差对总量只贡献 \(O(\vartheta(AN+O(1))/N^2)\)。端点取整所涉及的有界多个素数的归一化权重也是 \(o(1)\)。
+
+前缀中 \(\sum_\sigma\lfloor\sigma/p\rfloor=\sum_{m\ge1}(m_v-mp)_+\)。在高度 \(h\) 处改要求 \(\sigma\ge(h-q_v)_+p\) 即得 \(R_h\)。每层一个同余类有 \(b_jN+O(1)\) 个连续差分，四类相加给 \(C_h\)。当 \(p/N=y\ge\eta\) 时可能出现的 \(h,m\) 个数有与 \(N\) 无关的上界，故可逐项取极限。\((x-my)_+\) 在 \([\eta,A]\) 上的积分是三角形面积 \((x-m\eta)_+^2/(2m)\)，因为 \(A\ge x\)。小于 \(\eta N\) 的那段用第一种估计，单位权重极限为 \(\eta\)。这就从实际乘入的素数幂得到 \hyperref[eq:9]{(9)} 的每一项。
+
+
+
+\Needspace{5\baselineskip}
+\subsection{4.3　同一素数下的重合频率}
+式 \hyperref[eq:9]{(9)} 给出基础分母上界。最终证书还使用同余余数上的差因子。为说明可以扣除多少，固定一个奇素数 \(p\)，大于各非零节点差的绝对值，且 \(p^2>\max_v m_v\)。令 \(M=2V+1,\ h_v=\lfloor m_v/p\rfloor,\ H_p=\sum_v h_v\)，\(c_r\) 为频率在模 \(p\) 余数类 \(r\) 中的列数，\(K_N=\sum_{\rm col} j-L_0\)。对整数 \(s=Mk+l,\ 0\le l<M\)，定义
+\[
+ \Phi_M(s)=M k(k-1)/2+lk .
+\]
+该素数的分母指数至多为
+\[
+ \max\left(0,\ K_N-\sum_{r\bmod p}\Phi_M(c_r-H_p)\right).                 \tag{9a}
+\]
+\textbf{证明。} 先作引理 4.1 的节点差商。其分母都是 \(p\) 处的单位，且第 \(v\) 块中低于 \(q_v\) 次的节点幂已消去。对式 \hyperref[eq:14]{(14)} 的每个分块分配，设 \(n_{vr}\) 为到节点 \(v\) 的余数 \(r\) 的列数。块内 Vandermonde 乘积有 \(\sum_{v,r}\binom{n_{vr}}2\) 个差被 \(p\) 整除。对这个乘积每求一次导数至多去掉一个因子，全部导数次数至多为 \(K_N\)。若两个频率相等，任何未被求导的零因子使整项消失，仍满足此界。第 \(v\) 块的阶乘分母付出
+\[
+ \sum_{\sigma<m_v}\operatorname{ord}_p(\sigma!)
+ =p\binom{h_v}2+(m_v-ph_v)h_v .
+\]
+用 \(\sum_r n_{vr}=m_v\) 展开，减去这些阶乘后留下的计数恰为
+\(\sum_{v,r}\binom{n_{vr}-h_v}{2}\)。对每个 \(r\)，其中 \(M\) 个自变量之和为 \(c_r-H_p\)。整数函数 \(u(u-1)/2\) 离散凸；将相差至少二的一对数相向移动一步只会减小总和。均衡时的最小值就是 \(\Phi_M(c_r-H_p)\)，包括自变量为负的情形。这给出 (9a)。
+
+写 \(y=p/N,\ x=|r|/N\in[0,y/2]\)，其中 \(r\) 取离零最近的代表。等宽频带中，除地板函数跳线外，两个计数的极限表达为
+\[
+ C(x,y)=\sum_j\left(1+\left\lfloor\frac{u_j-x}{y}\right\rfloor+
+                           \left\lfloor\frac{u_j+x}{y}\right\rfloor\right),
+ \qquad H(y)=\sum_v\lfloor a_v/y\rfloor .
+\]
+在基础分母估计付足 \(K_N\)、且 (9a) 的零截断允许扣减的区域，归一化的扣减是 \(2L^{-1}\iint\Phi_M(C-H)\,dx\,dy\)。因子二来自正负余数。实际求下界只计已核实的梯形区域，并分别核对它与原有尾层估计的相容条件。各开区域上整数计数不变，边界是直线，面积可作有理数运算。固定正的素数窗口内，余数网格的极限是 \(dx\)，由 \(\vartheta(Nt)/N\to t\)，素数的对数权重给出 \(dy\)。遇到 \(a_v/y\) 的跳点，先删去任意小邻域再取极限，其质量也趋于零。以相容的尾层积分和各梯形扣减修正基础费用，才得到第 8 节使用的 \(G\)。
+
+
+\Needspace{5\baselineskip}
+\section{5. 用行列式的乘积公式估计大小}\label{ux7528ux884cux5217ux5f0fux7684ux4e58ux79efux516cux5f0fux4f30ux8ba1ux5927ux5c0f}
+
+同一节点上有许多相近频率。若把每个条目先取最大值，再粗略相乘，就看不见这种接近。把一个节点的行放在一起展开，会得到频率差的乘积；其对数极限才是本节的能量。带权场对应解析延拓后多出来的指数因子。
+
+把整数频率 \(t\) 缩成 \(x=t/N\)。一层在区间 \([-u_j,u_j]\) 上逐渐填满。给每一列质量 \(1/N\)，全部列的极限分布就是 \(\nu(dx)=\sum_j\mathbf1_{[-u_j,u_j]}(x)\,dx\)，总质量是 \(L\)。按节点拆行列式时，每个节点只会分到其中的一部分。用 \(\mu_v\) 表示分给 \(v\) 的分布，于是 \(\mu_v\ge0\)、\(\sum_v\mu_v=\nu\)、\(\int d\mu_v=a_v\)。称这样的分配为可行分配。每个 \(\mu_v\) 的密度都被 \(T+1\) 控制。记它的一阶矩为 \(m_v(\mu)=\int x\,d\mu_v(x)\)。带括号的量和整数行数 \(m_v\) 可以从记号区分。定义
+
+点质量 \(\delta_x\) 对连续函数 \(g\) 的积分为 \(g(x)\)，密度 \(r\) 所给的积分为 \(\int gr\,dx\)。一组测度若在每个连续检验函数上积分都收敛，就称为弱收敛。全部列的测度在每层都是等距离和，Riemann 和的极限给出文中的 \(\nu\)。每个可行的 \(\mu_v\) 均受 \(\nu\) 控制，从而有密度且至多 \(T+1\)。例如取 \(\mu_v=(a_v/L)\nu\) 就是一种可行分配。
+
+\[
+ \begin{aligned}
+ I(\mu,\rho)&=\iint\log(2|x-y|)\,d\mu(x)d\rho(y),\\
+ \mathcal F(\mathbf k)&=\frac1L\sup_\mu\sum_v
+       \left(k_v m_v(\mu)+\tfrac12 I(\mu_v,\mu_v)\right),\\
+ A_0&=\frac1{2L}\sum_v a_v^2\big(\tfrac32-\log(2a_v)\big).
+ \end{aligned}                                                            \tag{12}\label{eq:12}
+\]
+
+上确界取遍全部可行分配。核在 \(x=y\) 时有对数奇点，但有界密度下双重积分存在。\(\mathcal F\) 的第一项记录频率偏向哪一端，第二项记录同一节点收到的频率之间相隔多远。若 \(f_0\) 是 \(\mathcal F(\mathbf0)\) 的一个可靠上界，引理 4.2 所得整系数辅助多项式满足
+
+积分核 \(K(x,y)=\log(2|x-y|)\) 在对角线的奇点可积。固定 \(x\) 时，在 \(|x-y|<\epsilon<1/2\) 上对其绝对值积分至多 \(2\epsilon(1-\log(2\epsilon))\)。乘一个密度上界后仍一致趋于零。因此实的有界符号密度之间也可定义双线性积分 \(I\)。
+
+\[
+ \log\mathcal L(R)\ \le\ nN(A_0+G+f_0+o(1)).                              \tag{13}\label{eq:13}
+\]
+
+下面推导 \hyperref[eq:13]{(13)}，同时得到下一节在圆周上需要的估计。把行列式按节点 \(v\) 作 Laplace 展开。固定分给某点的 \(m=m_v\) 列并提出相位与列常数，令 \(0\le j'_c\le T\) 表示各列的相应阶数。对于有界的 \(z_v\)，所余的块等于
+
+\[
+ \det\big((\partial_{t_c}+z_v)^{j'_c}p_\sigma(t_c)\big)_{\sigma,c}
+ =\frac{\prod_c(\partial_{t_c}+z_v)^{j'_c}\,
+               \prod_{c<c'}(t_{c'}-t_c)}{\prod_{\sigma=0}^{m-1}\sigma!}.   \tag{14}\label{eq:14}
+\]
+
+这是普通 Vandermonde 公式：先将 \(t_c\) 当作彼此独立的变量，再对第 \(c\) 列施加它自己的微分算子。最后代入实际频率，允许两个频率相同。Cauchy 导数估计在每个变量半径一的圆上给出分子上界 \(C_{T,z_v}^{m}\prod_{c<c'}(|t_{c'}-t_c|+2)\)。两个频率都可移动一，故差距最多增加二。列的分配数不超过 \((2V+1)^n\)，取对数除以 \(nN\) 后趋于零。用 Stirling 公式 {[}4{]} 对阶乘的对数求和，\(\sum_{\sigma<m}\log(\sigma!)=\frac12m^2\log m-\frac34m^2+O(m\log(2m))\)，所以每对频率提出 \(N\) 的代价恰好被消去。
+
+Vandermonde 等式可直接验算。交换两个频率变量时幂矩阵的行列式变号，故被每个 \(t_{c'}-t_c\) 整除，两边同次，比较 \(t_1^0t_2^1\cdots t_m^{m-1}\) 的系数可知常数为一。除以各行的 \(\sigma!\) 就得到 \hyperref[eq:14]{(14)} 分母。在每个排列里，含有 \(t_c\) 的只有一项，故可让第 \(c\) 个微分算子只作用于这一列。一定要在微分后再赋予相同频率：\(m=2\) 时，若只对第二列求一次导数，\(\partial_{t_2}(t_2-t_1)=1\)，即使最后取 \(t_2=t_1\) 也是一。
+
+在各独立变量的复圆 \(|\tau_c-t_c|=1\) 上，\(|\tau_{c'}-\tau_c|\le|t_{c'}-t_c|+2\)。反复用 Cauchy 积分公式，求 \(r_c\) 阶导数至多再花 \(r_c!\)。展开 \((\partial+z_v)^{j'_c}\) 后，每列的总常数至多 \(\sum_{r=0}^{j'_c}\binom{j'_c}r r!|z_v|^{j'_c-r}\)。当 \(T\) 固定且路径有界，其对数总费用为 \(O(m)\)。分配列到节点至多有 \((2V+1)^n\) 种，这个数的对数在 \(nN\) 尺度上也消失。
+
+\textbf{仔细核对 \(\log N\)。} 对单调函数逐单位区间作积分比较，有 \(\log(k!)=k\log k-k+O(\log(2k))\)。将 \(k\log k\) 再求和，原函数是 \(x^2\log x/2-x^2/4\)；减去 \(\sum_{k<m}k\)，得到 \(\sum_{k<m}\log(k!)=m^2\log m/2-3m^2/4+O(m\log(2m))\)。写 \(x_c=t_c/N\)，在所有差中提出 \(N^{m(m-1)/2}\)，减去阶乘对数后剩 \[
+ \tfrac12m^2(3/2-\log(m/N))+O(m\log(2N)).
+\] 用 \(m/N\to a_v\)、\(n/N\to L\)，再把剩余核 \(\log|x-y|\) 改写为 \(\log(2|x-y|)-\log2\)，正好得到 \hyperref[eq:12]{(12)} 的 \(A_0\)。
+
+由离散点换成积分需要谨慎，因为两个频率可能相等。各分配的经验分布 \(N^{-1}\sum_c\delta_{t_c/N}\) 都在同一紧区间上、总质量有界，故可取弱收敛子列。也可以在稠密的可数点集上逐点选取分布函数的子列，再对连续函数积分。所有极限分布的和是 \(\nu\)，所以各自密度有界。先固定 \(\epsilon>0\)，用连续核 \(\log\max(|x-y|,\epsilon)\) 加 \(\log(1+2/(N\epsilon))\) 控制 \(\log(|x-y|+2/N)\)。在固定截断下，加入对角项的总误差除以 \(nN\) 趋零。先令 \(N\to\infty\)，再令 \(\epsilon\downarrow0\)，便得到 \hyperref[eq:12]{(12)} 中的对数积分。其中额外的 \(\log2\) 已计入常数 \(A_0\)。若某列另有指数因子 \(\exp(t_cz_v)\)，取其模还要加上一阶矩，系数就是 \(\operatorname{Re}z_v\)。估计 \hyperref[eq:13]{(13)} 本身没有这一因子。在 \(|Y|=1\) 上取最大模，Cauchy 公式使每个系数都不超过这个数，再乘上 \(\deg R+1\) 就能控制长度。原点因子在单位圆上的模等于一，清分母的因子贡献 \(G\)。
+
+为说明极限存在，可在所有有理端点提取子列，使每个块的累计质量收敛。长度 \(\delta\) 的区间质量至多 \((T+1)(\delta+2/N)\)，故极限累计函数延拓为 Lipschitz 函数，给出密度有界的极限测度。它们的总和、质量分别为 \(\nu,a_v\)。连续函数可在小格用常数一致逼近；对积测度，把正方形划成矩形，每个矩形的积质量收敛，亦得连续双变量函数积分收敛。
+
+对 \(u=|x-y|\)，\(u+2/N\le\max(u,\epsilon)(1+2/(N\epsilon))\)。固定 \(\epsilon>0\) 时截断对数核连续，配对之和可用积测度积分的一半来算，只须减掉 \(m\) 个对角项，它们除以 \(nN\) 后至多为 \(O(m|\log\epsilon|/(nN))\)。先令 \(N\to\infty\)，再由前面的可积估计令 \(\epsilon\downarrow0\)。不同列即使频率相同也适用。在每个 \(N\) 选使上界最大的分配，仍可如此提取子列，因此所得上界统一。若边界点也变动，可由圆周紧性再取其收敛子列。指数乘子贡献 \(\sum t_c\operatorname{Re}z_v/(nN)\to\operatorname{Re}z_v\,m_v(\mu)/L\)。在 \(|Y|=1\) 上去掉 \(Y^{L_0}\) 不改变模，每个系数由 Cauchy 公式被圆周最大值控制，乘 \(\deg R+1\) 后在对数尺度无代价。
+
+\textbf{怎样给上确界找上界？} 解出最优分布不是必需的。任选实的有界参考密度 \(\rho_v\)（可正可负），令 \(U_\rho(x)=\int\log(2|x-y|)\,d\rho(y)\)，再选实数 \(\beta_v\)。则有
+
+\[
+ L\mathcal F(\mathbf k)\le
+ -\tfrac12\sum_v I(\rho_v,\rho_v)+\sum_v\beta_va_v+
+ \int\max_v\big(k_vx+U_{\rho_v}(x)-\beta_v\big)\,d\nu(x).                \tag{15}\label{eq:15}
+\]
+
+这里的密度也可以当成普通函数来读。若 \(d\rho(y)=r(y)\,dy\)，则 \(U_\rho(x)\) 就是 \(\int_{-1}^1 r(y)\log(2|x-y|)\,dy\)。参考密度可以选负值，是因为下一步只要比较一个二次表达式，真实分配 \(\mu_v\) 始终非负。
+
+这个公式的核心是对任意有界实符号密度 \(\lambda\) 都有 \(I(\lambda,\lambda)\le0\)。令 \(x=\cos\theta\)、\(y=\cos\phi\)，并用 \(T_j(\cos\theta)=\cos(j\theta)\) 定义 Chebyshev 多项式 {[}5{]}。当 \(r<1\) 时，对 \(t=\theta+\phi\) 和 \(t=\theta-\phi\) 分别展开 \(\log|1-re^{it}|=-\sum_{j\ge1}r^j\cos(jt)/j\)。在 \(r\uparrow1\) 的极限，两项对数之和等于 \(\log(2|x-y|)\)。交换积分与极限可由如下上界保证。\(|1-re^{it}|^2=(1-r)^2+4r\sin^2(t/2)\)，故 \(r\ge1/2\) 时负部有共同的可积上界，正部也有界。在角度正方形上，线上的对数奇点可积。于是
+
+\[
+ I(\lambda,\lambda)=-2\sum_{j=1}^{\infty}
+            \frac{\big(\int T_j\,d\lambda\big)^2}{j}\le0 .
+\]
+
+代入 \(\lambda=\mu_v-\rho_v\) 并展开平方，就可把未知的二次项换成关于 \(\mu_v\) 的一次项。再加上质量恒等式 \(\beta_v\int d\mu_v=\beta_va_v\)。将各节点函数逐点取最大值，并用 \(\sum\mu_v=\nu\)，得到 \hyperref[eq:15]{(15)}。它对任何可行分配都成立，所以对上确界也成立。附录 A 说明怎样把右边整个积分严格围住。
+
+这里用到的第一类切比雪夫多项式（Chebyshev polynomials）由 \(T_0=1,T_1=x,T_{j+1}=2xT_j-T_{j-1}\) 定义。余弦加法给出 \(T_j(\cos\theta)=\cos(j\theta)\)。在两个角度 \(\theta+\phi\)、\(\theta-\phi\) 加起 \(\log|1-re^{iu}|\) 的 Fourier 级数，因 \(\cos(j(\theta+\phi))+\cos(j(\theta-\phi))=2\cos(j\theta)\cos(j\phi)\)，积分就成了平方。\(r\uparrow1\) 时，两项绝对值的乘积趋于 \(2|\cos\theta-\cos\phi|\)。对 \(r\ge1/2\)，每个负部由常数加 \(|\log|\sin(u/2)||\) 控制。先对一个角积分，用一个周期的积分作上界，便知在整个角度正方形上可积。左边用支配收敛，平方级数的非负项 \(r^j(\int T_j\,d\lambda)^2/j\) 用单调收敛。归一化的结果对任意总质量都非正。
+
+将 \(I(\mu_v-\rho_v,\mu_v-\rho_v)\le0\) 展开，明确得到 \[
+ \tfrac12 I(\mu_v,\mu_v)\le I(\mu_v,\rho_v)-\tfrac12 I(\rho_v,\rho_v).
+\] 在积分中加减 \(\beta_v\)，被积函数变成 \(k_vx+U_{\rho_v}-\beta_v\)，外面补 \(\beta_va_v\)。因为 \(\mu_v\ge0\)，将被积函数增大到所有节点的最大值只会增大积分。各节点相加后积分测度是 \(\nu\)。这就得出 \hyperref[eq:15]{(15)}；参考密度与电荷不必由最优化算法证明最优。
+
+\Needspace{5\baselineskip}
+\section{6. 当代数根靠近圆周率时}\label{ux5f53ux4ee3ux6570ux6839ux9760ux8fd1ux5706ux5468ux7387ux65f6}
+
+普通长度界并不区分在哪个根处取值。接近 \(\pi\) 时，要利用相位本身就是指数函数的特殊值。每一列先按根的位移展开，再把固定选择的整个行列式放进复圆盘，让圆心零点的阶数转化成内点的衰减。
+
+\Needspace{5\baselineskip}
+\subsection{6.1　把根的位移逐列展开}\label{ux628aux6839ux7684ux4f4dux79fbux9010ux5217ux5c55ux5f00}
+
+令 \(\theta=i\pi/2\)，\(\varepsilon=i(\alpha-\pi)/2\)。选取 \(\pi/2\) 的依据是等式 \(e^{t\theta v}=i^{vt}\)，它使解析函数在这些点的值与整系数构造中的相位精确相等。下面把根 \(\alpha\) 相对 \(\pi\) 的误差一项一项展开。暂略每列共同的 \(2^j\)，有精确恒等式
+
+\[
+ i^{vt}(\partial_t+iv\alpha/2)^jp_\sigma(t)
+ =\sum_{\ell=0}^j\binom j\ell\varepsilon^\ell v^\ell
+      [p_\sigma(\partial_x)(x^{j-\ell}e^{tx})]_{x=\theta v}.              \tag{16}\label{eq:16}
+\]
+
+验证时把平移后的幂按二项式展开，再用 \(p(\partial_x)(x^m e^{tx})=e^{tx}(\partial_t+x)^mp(t)\) 即可。给每一列选择一项 \(\ell_c\)，把选到 \(\ell\) 的列数记为 \(n_\ell\)。固定实数 \(0<z<1\)。每个节点自己选一条由解析函数 \(\psi_v\) 给出的路径，函数有实系数，在闭单位圆盘附近解析，并满足 \(\psi_v(0)=0\)、\(\psi_v(z)=v\)。在 \hyperref[eq:16]{(16)} 的中括号里\textbf{先求导}，再代入 \(x=\theta\psi_v(w)\)，同时保留实际的因子 \(v^{\ell_c}\)。这给出一个解析行列式 \(H(w)\)。在 \(w=z\)，乘回先提出的二项式系数和 \(\varepsilon\) 的幂，恰好还原了所选的那项。
+
+设 \(p(t)=\sum a_rt^r\)，约定 \(p(\partial_x)=\sum a_r\partial_x^r\)。因为 \(x^me^{tx}=\partial_t^m e^{tx}\)，不同变量的微分可交换， \[
+ p(\partial_x)(x^me^{tx})=\partial_t^m\big(p(t)e^{tx}\big)
+ =e^{tx}(\partial_t+x)^mp(t).
+\] 现在 \(iv\alpha/2=\theta v+\varepsilon v\)，把括号的幂展开。在 \(x=\theta v\) 处取值时，所需的 \(e^{tx}\) 恰为 \(i^{vt}\)。一列选定一个 \(\ell_c\) 之后，\(\varepsilon^{\ell_c}\) 可作外部标量；\(v^{\ell_c}\) 则留在原节点，否则将改变稍后识别相同列向量的条件。路径代入在多项式微分\textbf{以后}进行。在 \(w=z\) 的等式是精确的。
+
+\textbf{引理 6.1}　\(H\) 在 \(w=0\) 的消失阶数至少为
+
+\[
+ h=\sum_{\ell=0}^T\binom{n_\ell}{2}-\sum_v\binom{m_v}{2}.                 \tag{17}\label{eq:17}
+\]
+
+把 \(x^{j-\ell}e^{tx}\) 展为 \(x^k\) 的级数。固定 \(\ell,k\) 后，纵向看整列，各行组成同一个向量 \(v^\ell[p_\sigma(\partial_x)x^k]_{x=\theta\psi_v(w)}\)，只有前面的常数因列而异。若同一 \(\ell\) 组的两列选了同一 \(k\)，行列式便是零。\(n_\ell\) 个互不相同的非负整数最少加到 \(0+1+\cdots+(n_\ell-1)=\binom{n_\ell}{2}\)。每一行求导至多损失 \(\sigma\) 阶，全部损失为 \(\sum_v\binom{m_v}{2}\)。取某一固定 Taylor 系数时，超过所需阶数加 \(\max\sigma\) 的 \(k\) 都不参与，故上述逐项推理有效。如果右端为负，下界仍成立。
+
+例如三列标签为 \((0,0,1)\)。若相应幂次选 \((0,0,2)\)，前两列有完全相同的 \((\ell,k)\)，只能差一个标量，行列式为零。若选 \((0,1,0)\)，两个 \(k=0\) 分别带有 \(v^0\) 和 \(v^1\)，不必相关。故最低可能幂次和是 \(\binom22+\binom12=1\)。一般一组 \(n_\ell\) 个互异非负整数之和至少 \(0+1+\cdots+(n_\ell-1)\)。在第 \(\sigma\) 行，\(p_\sigma(\partial_x)x^k\) 为零或为 \(x^{k-\sigma}\) 的倍数，代入 \(\psi_v(0)=0\) 至少留下 \(k-\sigma\) 阶。每个排列都用每一行一次，故扣除 \(\sum_v\binom{m_v}{2}\)。对任一指定的 Taylor 系数，只需有限多个 \(k\)，逐系数展开无交换无穷排列之虞。
+
+在圆周上改按节点展开\textbf{同一个完整行列式}，这样每一块仍有从零起的全部前缀行。对一个块提出各列的指数和 \(v^{\ell_c}\)，所余正是 \hyperref[eq:14]{(14)}，其中 \(j'_c=j_c-\ell_c\)。固定路径后，各种有界因子以及所有选择的数目只增加 \(O_{T,V,\psi}(n\log n)\) 的对数。第 5 节给出的边界上界率是 \(A_0+\mathcal F((\pi/2)\operatorname{Im}\boldsymbol\psi)\)。原有负号可以把全部频率左右反射而去掉。这个上界的误差对所有分配、所有圆周点一致，因为任何违例序列都能选出收敛的圆周点与弱收敛的分布，并在极限重用第 5 节的截断论证。
+
+把在圆盘内实点 \(z\) 处的 Poisson 平均写为 \(\mathbb E_z\)，圆周概率密度是 \((1-z^2)/(2\pi|e^{i\varphi}-z|^2)\)。它将边界上的对数大小变成内部的上界。这也可以从调和函数的平均值性质推出。若解析函数在闭盘上处处非零，则它的对数模是调和函数，Poisson 公式给出等号。若在内点 \(a\) 有零点，就除以 \((w-a)/(1-\bar a w)\)，按重数重复。这个因子在圆周上的模是一，在盘内的模小于一，故把它乘回只会减小内部的对数模，这就给出了所需不等式。具体地，把 \(H(w)\) 除去在零点的实际幂次，对余下解析函数的对数模应用次调和 Poisson 不等式，便有 \(\log|H(z)|\le h\log z+\mathbb E_z\log|H(e^{i\varphi})|\)。边界有零点时可以先在稍小的圆上取极限。恒零的行列式也满足所需上界。令 \(\mathcal B_z\) 是所有上述路径对应的 \(\mathbb E_z\mathcal F((\pi/2)\operatorname{Im}\boldsymbol\psi)\) 的下确界。
+
+\textbf{圆盘内的 Poisson--Jensen 不等式。} 对实内点 \(0<z<1\)，Poisson 核 \(P_z(\varphi)=(1-z^2)/|e^{i\varphi}-z|^2\) 的平均是 \(1\)，第 \(k\) 个 Fourier 系数是 \(z^{|k|}\)，由几何级数相加可得。边界连续函数对该核的平均等于其调和延拓在 \(z\) 的值。对三角多项式用 \(r^k\cos k\varphi,r^k\sin k\varphi\) 的调和性即可验证，一般情形以一致逼近得到（见下文的 Fejér 核）。次调和函数满足局部圆周均值上界，因而受同边值的调和函数控制。具体到解析函数 \(G\)，正则化 \(\tfrac12\log(|G|^2+\epsilon)\) 的 Laplace 算子为 \(2\epsilon|G'|^2/(|G|^2+\epsilon)^2\ge0\)，所以可以用最大值原理。令 \(\epsilon\downarrow0\) 即得 \(\log|G(z)|\) 的 Poisson 上界；若边界有零点，提出其有限重数的因子后只有可积的对数奇点。恒零函数另算，其对数记 \(-\infty\)。
+
+若 \(H(w)=w^{h_0}G(w)\)，则边界上 \(|w|=1\) 不改变模，内点却给出 \(h_0\log z\)。因 \(\log z<0\)，以已证明的下界 \(h\le h_0\) 替换 \(h_0\) 仍是上界，即使 \(h<0\) 也成立。
+
+现在用 \(N=bX+O(1)\)（可按固定格距向下取整） 把矩阵大小和目标多项式的高度联系起来。若 \(b>0\)，且 \(|\alpha-\pi|\le\exp(-(c-o(1))X)\)，\(c>0\)，记 \(\kappa=\log(1/z)\)、\(B=b\kappa L/2\)，合并 \hyperref[eq:16]{(16)}、\hyperref[eq:17]{(17)} 和清分母估计得
+
+\[
+ \begin{aligned}
+ \limsup\frac{\log|R(\alpha)|}{nX}
+ &\le b(A_0+G+\kappa s+\mathcal B_z)-F_B(c),\\
+ F_B(c)&=\min_{\substack{p_0,\ldots,p_T\ge0\\ \sum p_\ell=1}}
+        \left(c\sum_\ell \ell p_\ell+B\sum_\ell p_\ell^2\right).
+ \end{aligned}                                                            \tag{18}\label{eq:18}
+\]
+
+这里 \(p_\ell=n_\ell/n\)。分别除以 \(nX\) 后，\(\sum_\ell\binom{n_\ell}{2}\) 变为 \((bL/2)\sum p_\ell^2+o(1)\)，\(\sum_v\binom{m_v}{2}\) 变为 \(bs+o(1)\)。误差幂贡献 \(-c\sum\ell p_\ell\)。把实际能取到的比例放宽到整个单纯形上取最小值，可以同时控制全部项。又因 \(\alpha\to\pi>1\)，除去 \(\alpha^{L_0}\) 只会使绝对值更小。这里总是先固定各条路径令 \(X\to\infty\)，然后才对路径取下确界。这也说明，即使当初用另一根来选定 \(R\)，仍可把 \hyperref[eq:18]{(18)} 用于任何趋近 \(\pi\) 的复根。
+
+归一化可逐项验算：\(n/X\to bL\)，\(\sum m_v^2/(2nX)\to bs\)，故原点零阶项贡献 \(-b\kappa L\sum p_\ell^2/2+b\kappa s\)。位移幂次给 \(\sum\ell n_\ell\log|\varepsilon|/(nX)\le-c\sum\ell p_\ell+o(1)\)，误差对 \(\ell\le T\) 一致。列标签至多 \((T+1)^n\) 种，取总和多出的对数费用除以 \(nX\) 后归零。要给所有项的负代价以上界，就必须取正代价的\textbf{最小值}。放宽到整个单纯形只会使这个最小值更小。每套路径先固定再取 \(X\) 极限，最后才取路径下确界。
+
+\Needspace{5\baselineskip}
+\subsection{6.2　怎样同时选取各节点的路径}\label{ux600eux6837ux540cux65f6ux9009ux53d6ux5404ux8282ux70b9ux7684ux8defux5f84}
+
+对实向量 \(\mathbf d\)，定义 \(H_*(\mathbf d)=L^{-1}\max_\mu\sum_vd_vm_v(\mu)\)，只保留 \hyperref[eq:12]{(12)} 中的线性部分。把 \(x\) 左右反射可见 \(H_*\) 和 \(\mathcal F\) 都是偶函数。由上确界的定义，\(\mathcal F\) 是凸函数，且 \(\mathcal F(\mathbf k+\mathbf d)\le\mathcal F(\mathbf k)+H_*(\mathbf d)\)。由于质量有界且 \(|x|\le1\)，这两个函数都满足 Lipschitz 条件。若 \(d_v\) 随 \(v\) 递增，最大的线性收益可以按区间直接求出。从左到右把 \(\nu\) 切成连续区间，依次分给 \(-V,\ldots,V\)，质量恰为相应的 \(a_v\)，所得一阶矩记为 \(m_v^*\)。确实，把加权和按非负差 \(d_v-d_{v-1}\) 拆开，每个尾部的节点所能拿到的最大一阶矩，都来自具有该质量的最右一段。这样的切分同时实现所有尾部的最大值。因此 \(H_*(\mathbf d)=L^{-1}\sum_vd_vm_v^*\)。特别记 \(Q=L^{-1}\sum_vv m_v^*\)，此处对称性给出 \(m_{-v}^*=-m_v^*\)。
+
+对任意分配，\(\big|\sum_v(k_v-k'_v)m_v(\mu)\big|/L\le\|\mathbf k-\mathbf k'\|_\infty\)，所以取上确界后仍有 Lipschitz 控制。若 \(d_v\) 递增，把它写成 \(d_{-V}\) 加各个非负的相邻增量，则只须最大化每个尾部节点的总一阶矩。设尾部实际分配为 \(\omega\le\nu\)，同质量的最右区间测度为 \(\omega^*=\nu|_{[u,1]}\)。因为二者质量相同， \[
+ \int x\,d(\omega-\omega^*)=\int(x-u)\,d(\omega-\omega^*)\le0 .
+\] \(u\) 左侧乘子非正，右侧测度差非正。各最右区间是嵌套的，故一个按顺序切分的分配能同时使所有尾部取最大。两套见证满足 \(a_{-v}=a_v\)，才有 \(m_{-v}^*=-m_v^*\)。
+
+现在在第一象限的圆弧上选取有界的向量阶梯函数 \(\mathbf k\)。关于虚轴偶反射，再关于实轴奇反射，得到带符号的全圆函数 \(\widetilde{\mathbf k}\)。写 \(S=|\sin\varphi|\)。凡公式中同时出现 \(S\) 和 \(\mathbf k\)，都把全圆的概率折回第一象限，以原来的第一象限数值计算。记 \(A_z=\pi(z^{-1}-z)/4\)。如果 \(d_v=A_zv-\mathbb E_z[Sk_v]\) 随 \(v\) 递增，就有
+
+\[
+ \mathcal B_z\le Q A_z-
+ \mathbb E_z\left[S\sum_v k_v m_v^*/L-\mathcal F(\mathbf k)\right].       \tag{19}\label{eq:19}
+\]
+
+这一步须解释一个相容性问题。边界上各节点的函数可以分别选择，但在同一个内点 \(z\)，每条路径必须精确回到自己的 \(v\)。解决它的是下面的恒等式。对满足 \(g(0)=0\) 的实系数解析多项式有
+
+\[
+ \mathbb E_z[(\pi/2)\operatorname{Im}g(e^{i\varphi})\sin\varphi]=A_zg(z).
+                                                                            \tag{20}\label{eq:20}
+\]
+
+只需检验 \(g(w)=w^k\)。将 \(\sin(k\varphi)\sin\varphi\) 写成余弦之差，Poisson 平均后得到 \((z^{k-1}-z^{k+1})/2\)，再线性相加即得 \hyperref[eq:20]{(20)}。对 \((2/\pi)\widetilde k_v\) 取 Fourier 级数的 Fejér 平均（即前若干个部分和再作算术平均）。其核非负、总质量为一，并且远离零的部分质量趋零，故有界阶梯函数在每个连续点被逼近，在有限多个跳点之外用有界收敛就得到 \(L^1\) 逼近。固定 \(z\) 时 Poisson 密度有界，加这个权重仍收敛。由于奇对称，所得近似是有限正弦和，恰好等于某个无常数项实系数多项式 \(g_v(w)\) 在圆周上的虚部。由 \hyperref[eq:20]{(20)}，\(A_zg_v(z)\) 趋向 \(\mathbb E_z[Sk_v]\)。
+
+对于 \(g(w)=w^k\)，由 \(2\sin(k\varphi)\sin\varphi=\cos((k-1)\varphi)-\cos((k+1)\varphi)\)，Poisson 平均乘上 \(\pi/2\) 恰为 \((\pi/4)(z^{k-1}-z^{k+1})=A_z z^k\)。取实系数线性组合即得 \hyperref[eq:20]{(20)}。没有常数项是必要的。特别地，若 \(g(z)=1\)，则 \(\mathbb E_z[(\pi/2)|\operatorname{Im}g|]\ge A_z\)。
+
+\textbf{Fejér 逼近为何适用。} 核 \[
+ K_m(\tau)=m^{-1}|1+e^{i\tau}+\cdots+e^{i(m-1)\tau}|^2
+\] 是非负三角多项式，由正交性知其圆周平均为一。在 \(\delta\le|\tau|\le\pi\) 上，几何和给出 \(K_m(\tau)\le1/(m\sin^2(\delta/2))\)。用这个核卷积后，阶梯函数在每一个连续点都收敛回原值：取 \(\delta\) 小于该点至最近跳点的距离，近处误差为零，远处质量趋零。函数一致有界，以支配收敛得 \(L^1\) 收敛。对连续函数，同一估计加上一致连续性给一致收敛。这里奇延拓使所得多项式只有正弦项，恰为实系数复多项式 \(\sum a_kw^k\) 的边界虚部。固定 \(z\) 时 \(P_z\) 有上界，故可在加权平均中取极限。\hyperref[eq:20]{(20)} 保证 \(A_zg_v(z)\to\mathbb E_z[Sk_v]\)。
+
+为补足归一化，取 \(0<t<1\)，令 \(p_t(w)=(z^{-1}+tz)w/(1+tw^2)\)，并选 \(\psi_v=g_v+(v-g_v(z))p_t\)。由于 \(p_t(0)=0\)、\(p_t(z)=1\)，两个端点条件都精确满足。直接算得在单位圆周上
+
+\[
+ \operatorname{Im}p_t(e^{i\varphi})
+ =\frac{(z^{-1}+tz)(1-t)\sin\varphi}{(1-t)^2+4t\cos^2\varphi}.
+\]
+
+\(|\operatorname{Im}p_t|-\sin\varphi\,\operatorname{Im}p_t\) 非负，并且至多为 \((z^{-1}+tz)(1-t)/(4t)\)，因为 \(1-|\sin\varphi|=\cos^2\varphi/(1+|\sin\varphi|)\)。固定 \(t\) 时级数在圆周上一致收敛，故 \hyperref[eq:20]{(20)} 也适用于 \(p_t\)。令 \(t\uparrow1\)，得 \(\mathbb E_z[(\pi/2)|\operatorname{Im}p_t|]\to A_z\)。\(H_*\) 是偶函数且正齐次，于是补偿项的平均代价趋向 \(A_zH_*((v-g_v(z))_v)\)。然后用 Lipschitz 连续性让阶梯函数的逼近误差趋零。总平均至多为 \(\mathbb E_z\mathcal F(\mathbf k)+H_*((d_v)_v)\)，代入上面的有序区间公式即得 \hyperref[eq:19]{(19)}。若所有节点只采用标量路径 \(\psi_v=vp_t\)，还有一个较容易计算的上界
+
+分母的零点模为 \(1/\sqrt t>1\)，所以 \(p_t\) 在闭圆盘附近解析，且 \(p_t(0)=0,p_t(z)=1\)。在圆周上分子分母同乘 \(1+te^{-2i\varphi}\)，就得到上面的虚部公式。其符号同 \(\sin\varphi\)。写 \(S=|\sin\varphi|\)，两种代价的差是 \(|\operatorname{Im}p_t|(1-S)\)，而 \(1-S=\cos^2\varphi/(1+S)\) 抵消分母中的 \(\cos^2\varphi\)，使差一致地至多为 \((z^{-1}+tz)(1-t)/(4t)\)。所以 \(t\uparrow1\) 时平均绝对代价达到 \hyperref[eq:20]{(20)} 迫出的下界 \(A_z\)。这解释了为什么可以逼近它，即使路径在个别角度很大。
+
+先固定 Fejér 多项式，取 \(t\uparrow1\)。由 \(H_*\) 的偶性和正齐次性，修正向量的平均代价趋于 \(A_z H_*((v-g_v(z))_v)\)。再取 Fejér 极限，利用 Lipschitz 控制，修正代价成为 \(H_*((A_zv-\mathbb E_z[Sk_v])_v)\)。若括号内递增，前面算出的最右区间分配正好给出 \hyperref[eq:19]{(19)}。取所有 \(g_v=0\)、用 \(A_z=(\pi/2)\sinh\kappa\)，便是 \hyperref[eq:21]{(21)}。
+
+\[
+ \mathcal B_z\le f_0+QA_z=f_0+(\pi/2)Q\sinh\kappa.                       \tag{21}\label{eq:21}
+\]
+
+\Needspace{5\baselineskip}
+\subsection{6.3　扰动必须离开其中心}
+式 \hyperref[eq:18]{(18)} 对所有标号分配均成立。进一步的节省来自如下列变换。对每个频率 \(t\)，由证书固定一个节点 \(a_*(t/N)\)；令 \(\epsilon=i(\alpha-\pi)/2\)。在点 \(\alpha\) 将列算子换为
+\[
+ \big(\partial_t+vi\alpha/2-\epsilon a_*(t/N)\big)^j .
+\]
+对该频率而言，低于 \(j\) 阶的列都已经存在，中心只是一个数，故这是对角元全为一的三角列变换。行列式取值不变。按 \(\ell\) 展开后，在式 \hyperref[eq:16]{(16)} 中原来随节点出现的 \(v^\ell\) 变为 \((v-a_*)^\ell\)，而外部仍有 \(\epsilon^\ell\binom j\ell\)。
+
+固定各列的 \(\ell\)，记 \(\eta\) 为 \(\ell>0\) 的列占全部列的比例。在原点将 \((v-a_*)^\ell\) 展为 \(v^q\)，其中 \(0\le q\le\ell\)。令 \(p_q\) 为标号 \(q\) 的比例。式 \hyperref[eq:17]{(17)} 用各 \(np_q\) 代入后给出相应的零阶下界；对所有可能展开取最小值就是整个函数的下界。此外
+\[
+ n^{-1}\sum_{\rm col}\ell\ \ge\ \sum_q q p_q,\qquad
+ \eta\ge 1-p_0 .
+\]
+圆周上仍估计原来那个固定了 \(\ell\) 的完整行列式。任何非零块分配都须把这 \(\eta n\) 列送到各自中心以外，否则有因子 \(0^\ell\)。给正阶层上中心以外的节点加价格 \(\lambda_i\ge0\)：在式 \hyperref[eq:15]{(15)} 的该层积分中取
+\[
+  \max_v\{k_vx+U_{\rho_v}(x)-\beta_v+\lambda_i{\bf1}_{v\ne a_*(x)}\}.
+\]
+所得上界再减 \(\lambda_i\eta\) 仍覆盖每个可行分配。零阶层不加价。普通上界和加价上界可选不同的参考密度。还可保留能量余项：令 \(\sigma=\nu-\sum_v\rho_v\)，核为第 5 节的 \(I\)，则
+\[
+ \sum_v I(\mu_v-\rho_v,\mu_v-\rho_v)
+ =I(\sigma,\sigma)/M+
+   \sum_v I(\mu_v-\rho_v-\sigma/M,\mu_v-\rho_v-\sigma/M)
+ \le I(\sigma,\sigma)/M .
+\]
+在能量上界中计入 \(I(\sigma,\sigma)/(2ML)\)。这是将同一总频率测度分配给各节点所得的余项。
+
+在采用加价的一侧半圆，令 \(W_i\) 为场 \(i\) 的 Poisson 质量，已包含该角区间内的凸组合权重。由普通场的上界 \(U_i\)、加价场减去 \(\lambda_i\eta\) 前的上界 \(V_i\)，把基础边界费增加至多 \(\sum_i W_i(V_i-U_i)\)，同时获得至少 \(\Lambda\eta\) 的节省，其中 \(\Lambda\le\sum_iW_i\lambda_i\)。另一侧使用普通场。受约束分配是原分配的子集，路径修正的支持函数仍可用原来的 \(H_*\) 控制。因此上述两项可以与式 \hyperref[eq:19]{(19)} 的路径修正合用。区间计算在差为负时要交换权重端点。第 8 节用 \(A\) 包含增加后的边界费，用 \(\delta=b\Lambda\) 计入扰动的节省。
+
+
+\Needspace{5\baselineskip}
+\section{7. 由同一个结式推出统一下界}
+\Needspace{5\baselineskip}
+\subsection{7.1　主根的估计与全体扰动标号}
+记 \(C=1+w_d,\ Y_*=d-1,\ y=\sum_{i>1}c_i\)。反证序列满足 \(0\le y\le Y_*,\ c_1\ge C-y\)。取 \(N=bX+O(1)\)，其中 \(X=\log\mathcal L(f)\)，则 \(N/X\to b\) 且 \(n/N\to L\)。形式证明取 \(X=\log\mathcal M(f)\)，并把 \(N\) 向下取为形状规定的固定整数倍；由式 \hyperref[eq:3]{(3)}，两种 \(X\) 相差有界，两个比值的极限相同。对可能为无穷大的主根逼近率，只使用有限下界 \(C-y\)。
+
+取 \(0<B\le bL\log(1/z)/2,\ \delta=b\Lambda\ge0\)。结合第 6.3 节，式 \hyperref[eq:18]{(18)} 中主根可扣除的量至少为
+\[
+ F(c)=\min_{\substack{p_q\ge0\\\sum_{q=0}^T p_q=1}}
+ \left\{ B\sum_{q=0}^T p_q^2+c\sum_{q=0}^T q p_q+\delta(1-p_0)\right\},
+ \quad c=C-y . \tag{22}\label{eq:22}
+\]
+在 \(C-Y_*\le c\le C\) 上，两组数据都满足 \(c+\delta<2B<3c+\delta\)。因为 \(c>0\)，未用坐标中最小的边际代价为 \(2c+\delta\)。令
+\[
+ p_1=\frac{2B-c-\delta}{4B},\quad p_0=1-p_1,\quad p_q=0\ (q\ge2).
+\]
+前两坐标的边际代价同为 \((2B+c+\delta)/2\)，而 \(2c+\delta\) 比它大。对任何另一可行向量，从该点展开二次目标，线性项非负，余项是 \(B\) 乘坐标差的平方和。故这确为全局最小值，并且
+\[
+ F(c)=B-\frac{(2B-c-\delta)^2}{8B},\qquad
+ F(C)-F(C-y)\le my,\quad m=\frac{2B-C+Y_*-\delta}{4B}. \tag{23}\label{eq:23}
+\]
+最后一个不等式由 \([C-Y_*,C]\) 上 \(F'\) 的最大值给出。
+
+\Needspace{5\baselineskip}
+\subsection{7.2　次根、次数较低的输入与结式矛盾}
+写 \(g=A_0^++G+f_0^+\)，其中上标表示对相应量所取的有理上界。设 \(c_i>0,\ i>1\)。该根趋于 \(\pi\)；对同一个 \(R\)，在式 \hyperref[eq:18]{(18)} 和 \hyperref[eq:21]{(21)} 中选择标量路径，取 \(\kappa_i=c_i/(bL)\)。此时未加价的二次系数是 \(c_i/2\)，其单纯形最小值亦为 \(c_i/2\)（最小点 \(p_0=1\)）。相对于长度界 \(bg\)，其余增量至多为
+\[
+ b s\kappa_i+b(\pi/2)Q\sinh\kappa_i-c_i/2 .
+\]
+令 \(h_*=Y_* /(bL)<1\)。因 \(0\le t\le h_*\) 时 \(\sinh t\le t/(1-h_*^2)\)，用 \(\pi<4\) 得净节省至少为 \(\gamma_-c_i\)，其中
+\[
+ \gamma_-=\tfrac12-s/L-\frac{4Q}{2L(1-h_*^2)}. \tag{24}\label{eq:24}
+\]
+当 \(c_i=0\)，直接用 \(|R(\alpha_i)|/B_i^{\deg R}\le\mathcal L(R)\)，同一估计仍成立。
+
+令 \(D\) 为 \(\deg R/n\) 的渐近上界。用 \(A\) 表示证书中下式右侧各费用之和的有理上界，即
+\[
+ d(A_0^+ +G)+(d-1)f_0^+ +s\log(1/z)+\mathcal B_{\rm paid}\ \le A .
+\]
+这里 \(\mathcal B_{\rm paid}\) 包含第 6.3 节的加价费用和路径修正；扰动节省已经单独计入 \(F\)。若实际次数 \(e<d\)，每少一个次根就少付一份 \(g\)，而实例满足 \(g\ge0\)。将次数项、主根项和每个次根项代入式 \hyperref[eq:5]{(5)}，使用 \(\log\mathcal M(f)\le X\)，得到
+\[
+ 0\le\limsup\frac{\log|\operatorname{Res}(f,R)|}{nX}
+ \le D+bA-F(C-y)-\gamma_- y
+ \le D+bA-F(C)+(m-\gamma_-)y . \tag{25}\label{eq:25}
+\]
+各量均来自在该项的实主根处选定的同一个 \(R\)。第 8 节验证 \(F(C)-D-bA>0\) 及 \(\gamma_- > m\)。故右端对整个闭区间 \(0\le y\le Y_*\) 为负，包括最不利的 \(y=0\)。这与左端矛盾。
+
+\Needspace{5\baselineskip}
+\subsection{7.3　把常数传给每一个多项式}
+第 1 节的反证序列因而不存在。本原不可约的 \(f\) 具有一个共同的 \(c>0\)，满足 \(|f(\pi)|\ge cH(f)^{-w_d}\)。取 \(c'=\min(1,c\,2^{-dw_d})\)。由 \(H(f)\le 2^d\mathcal M(f)\)，有 \(|f(\pi)|\ge c'\mathcal M(f)^{-w_d}\)。按重数将任意非零整多项式写为 \(P=h\prod_{j=1}^r f_j\)，其中 \(h\in\mathbb Z\setminus\{0\}\)，\(0\le r\le d\)。Mahler 测度的乘法性给出
+\[
+ |P(\pi)|\ge |h|^{1+w_d}(c')^r\mathcal M(P)^{-w_d}
+ \ge (c')^d(d+1)^{-w_d} H(P)^{-w_d}.
+\]
+这就给出了式 \hyperref[eq:1]{(1)} 中可统一选取的正数。常数多项式对应 \(r=0\)。结合第 1 节的有限性论证即得式 \hyperref[eq:2]{(2)}。
+
+\Needspace{5\baselineskip}
+\section{8. 两组实际见证及最后的有理数比较}
+每一组都在正负频率上使用相同的频带。令 \(u_j\) 为下列第一行整数的 \(10^{-4}\) 倍，令 \(r_v\) 为第二行按 \(|v|\) 递增排列的权重。取
+\[
+ L=2\sum_j u_j,\qquad a_v=Lr_{|v|}/(r_0+2{\textstyle\sum_{k=1}^V}r_k).
+\]
+\textbf{二次。} 从零阶开始的 11 个带宽整数与 4 个行权重为
+\[
+\begin{gathered}
+ (10000,9433,8788,8119,7405,6632,5810,5535,4595,3438,1692),\\
+ (10000,9471,8567,6294).
+\end{gathered}
+\]
+\textbf{三次。} 从零阶开始的 18 个带宽整数与 7 个行权重为
+\[
+\begin{gathered}
+ (10000,9710,9363,9010,8650,8283,7907,7515,7110,\\
+ \hphantom{(}6685,6235,6097,5610,5077,4487,3820,2993,1917),\\
+ (10000,9812,9660,9112,8138,6653,3701).
+\end{gathered}
+\]
+\begin{center}\begin{tabular}{@{}lrr@{}}\toprule
+输入或检查量 & 二次 & 三次\\\midrule
+矩阵尺度比 \(b\) & 1.0677666 & 1.0695379\\
+圆盘半径 \(z\) & 0.164236 & 0.161125\\
+列数比例 \(L\) & \(71447/5000\) & \(120469/5000\)\\
+选行引理最小非末前缀余量 & \(423/1250\) & \(1917/5000\)\\
+普通参考场／带锚点参考场 & \(104/7\) & \(93/4\)\\
+折叠角区间数 & 107 & 98\\\bottomrule
+\end{tabular}\end{center}
+两组的末前缀余量都等于零，由总质量相等可直接验证。将每组频带、行权和对应的 \(b,z\) 一起代入，先作式 (9a) 的分母核算，再经式 \hyperref[eq:15]{(15)}、\hyperref[eq:19]{(19)} 与第 6.3 节的有向积分得到各项费用。证书用整数和分数记录每个输入。下表的 \(s,Q\) 取自用于次根估计的参数，\(B,\delta\) 已乘尺度比 \(b\)。
+
+\begin{center}\begin{tabular}{@{}lrr@{}}\toprule
+每格向下截取到 \(10^{-12}\) & 二次 & 三次\\\midrule
+\(G\) & 2.233866272040 & 2.534004421797 \\
+\(g\) & 1.910998360666 & 2.282572928534 \\
+\(s\) & 1.049274788674 & 0.992406047036 \\
+\(Q\) & 0.811483131391 & 1.458279793924 \\
+\(D\) & 3.238040564976 & 5.626261445595 \\
+\(A\) & 8.955029190392 & 15.007273981450 \\
+\(B\) & 13.781182442973 & 23.521830738397 \\
+\(\delta\) & 0.000009838496 & 0.000028488918 \\
+\(F(C)\) & 12.799921717459 & 21.677109855290 \\
+\(D+bA\) & 12.799921636503 & 21.677109744440 \\
+\(F(C)-D-bA\) & 0.000000080956 & 0.000000110849 \\
+\(\gamma_- -m\) & 0.105677189392 & 0.117747483548 \\
+\bottomrule\end{tabular}\end{center}
+读数 \(x\) 表示对应的精确有理数在 \([x,x+10^{-12})\) 内。倒数第二行直接得到严格主余量 \(>8/10^8,\ >11/10^8\)；最后一行两值均 \(>1/12\)。也可不用这两行而由前面数据复核：用 \(F(C)\) 的下端减 \(D+bA\) 的上端即可。例如二次至少为 \(12.799921717459-12.799921636504=0.000000080955\)。检查式 \hyperref[eq:23]{(23)} 的适用区间只需比较 \(C+\delta<2B\) 和 \(2B<3(C-Y_*)+\delta\)；两端成立即覆盖中间所有 \(c\)。
+
+由此第 7 节所需的两个符号均已确定。这个严格比较最终使用 \(C=17.161227,\ 28.412216\)，减一才得到多项式值的指数。旧讲义使用另外两组频带与参考场，给出 \(16.1942,\ 27.4188\)。此处所用的带宽、成本与余量均对应本节的两组见证。
+
+
+\Needspace{5\baselineskip}
+\section{附录 A　如何把有限见证用于连续积分}
+\Needspace{5\baselineskip}
+\subsection{A.1　参考密度与空间积分}
+定义域是 \([-1,1]\)。频带与参考密度的跳点放在已知的格线上，势函数用分段常密度的原函数计算。普通场与带中心价格的场分开求上界。若中心在格线上发生跳变，该格使用其内部的中心，并以同一个中心计算两个单侧端点值；这使加价项在格内为常数。
+定义两个原函数
+
+\[
+ F(x)=x(\log(2|x|)-1),\qquad J(x)=\tfrac12x^2\log(2|x|)-\tfrac34x^2,
+ \qquad F(0)=J(0)=0 .
+\]
+
+在非零点，\(J'=F\)、\(F'(x)=\log(2|x|)\)。区间 \([l,h]\) 上密度为 \(r\) 时，它对势函数的贡献为 \(r(F(x-l)-F(x-h))\)。两个单位密度区间 \([a,b]\)、\([c,d]\) 对 \(I\) 的贡献是 \(J(b-c)-J(a-c)-J(b-d)+J(a-d)\)。所以 \hyperref[eq:15]{(15)} 中的自能量可逐项算出，剩下须估计的是若干函数逐点取最大值之后的积分。
+
+第二个原函数公式可依次积分核对。先对 \(y\in[c,d]\) 积分得到 \(F(x-c)-F(x-d)\)，再对 \(x\in[a,b]\) 积分，正好给出四角的 \(J\) 项。区间有交叠时，可在对数奇点处分开积分，\(F\) 连续、奇点可积，原函数仍可使用。把相邻小区间对同一边缘的系数合并，就有 \(U_{\rho_v}(x)=\sum_h\Delta\rho_v(h)F(x-h)\)。
+
+用格长 \(\delta=1/40000\) 覆盖 \([-1,1]\)，共 80000 格。所有密度跳点和频带端点都在格点上。在一格内，端点最大值连成的弦支配各候选函数的线性插值。但真实曲线可能高出自己的弦，所以还必须留出误差。一个平移的 \(F\) 在紧邻奇点的每一格，其积分绝对误差至多 \(\delta^2/2\)。减去线性部分并换元可得更精确的 \(\delta^2\int_0^1|u\log u|du=\delta^2/4\)。距奇点至少 \(j\delta\) 的一格，\(|F''|\le1/(j\delta)\)，由线性插值余项，积分误差至多 \(\delta^2/(8j)\)。两侧相加，利用 \(\sum_{j\le2/\delta}1/j\le1+\lceil\log_2(2/\delta)\rceil\)，整个最大值积分可以加上如下保护量
+
+\[
+ (T+1)\left(\sum_h\max_v|\Delta\rho_v(h)|\right)
+ \delta^2\left(1+\frac{1+\lceil\log_2(2/\delta)\rceil}{4}\right).           \tag{26}\label{eq:26}
+\]
+
+这里 \(\Delta\rho_v(h)\) 是在端点 \(h\) 处的密度跳跃，区间外密度按零处理，故两端也计入。因为 \(U_{\rho_v}=\sum_h\Delta\rho_v(h)F(x-h)\)，而 \(\nu\) 的密度至多 \(T+1\)，\hyperref[eq:26]{(26)} 控制了整格中任何时刻成为最大值的那一条曲线。对带中心价格的场，在每个格内使用同样的弦线估计。
+
+\textbf{为何一次线性插值能控制整格。} 设 \(I=[l,l+\delta]\)，\(\mathcal I\) 表示以两端点连成直线。令 \(g_v(x)=k_vx+U_{\rho_v}(x)-\beta_v\)，\(g=\max_vg_v\)。当 \(x=l+t\delta\)、\(0\le t\le1\) 时， \[
+ \mathcal I g_v(x)=(1-t)g_v(l)+t g_v(l+\delta)\le\mathcal I g(x).
+\] 因线性项与常数项的插值误差均为零，逐点有 \[
+ g(x)\le\mathcal I g(x)+
+ \sum_h \max_v|\Delta\rho_v(h)|\,\big|F(x-h)-\mathcal I[F(\,\cdot-h)](x)\big|.
+\] 特别地无需跟踪格内哪个节点获胜。奇点右邻格写 \(x-h=t\delta\)，扣除直线后恰剩 \(\delta t\log t\)，绝对值积分为 \(\delta^2/4\)。左邻格由奇性同样为 \(\delta^2/4\)，合用 \(\delta^2\) 作保守上界。距奇点至少 \(j\delta\) 的格上，\(|F''|\le1/(j\delta)\)；用两次 Rolle 定理得插值余项含 \((x-l)(x-l-\delta)/2\)，其绝对值至多 \(\delta^2/8\)。再乘格长便得该格积分误差 \(\delta^2/(8j)\)。每一距离指标最多两格，调和和用二进分组至多 \(1+\lceil\log_2(2/\delta)\rceil\)。乘跳跃上界与 \(\nu\) 密度上界 \(T+1\)，即得 \hyperref[eq:26]{(26)}。\textbf{\hyperref[eq:26]{(26)} 是整个 \([-1,1]\) 上的积分加性误差界。} 每个开格内 \(\nu\) 密度为常数，端点最大值的弦线在该格的积分恰等于相应带权梯形面积。
+最终空间证书把两端之间的 \(80\,000\) 格分成 \(125\) 个条带。每个节点计算的是势的上界，格内误差另计；整区间积分由各格带权相加。上界中有负系数时须用乘数的反向端点。原函数的舍入误差、各条带整数和与总误差都进入对应的空间见证。
+\Needspace{5\baselineskip}
+\subsection{A.2　角度区间的有向权重}
+令 \(y=\tan(\varphi/2)\)，\(\varphi\in[0,\pi/2]\)，\(r=(1+z)/(1-z)\)，\(c=(1-y^2)/(1+y^2)\)。记从零到 \(y\) 的折叠 Poisson 总质量为 \(W(y)\)，对应的 \(S\) 的累积积分为 \(J_z(y)\)。把四个象限对应点的密度相加可得
+
+\[
+ \begin{aligned}
+ W(y)&=\frac2\pi\big(\arctan(ry)+\arctan(y/r)\big),\\
+ J_z(y)&=\frac{1-z^2}{2\pi z}\left(2\log r-
+            \log\frac{1+z^2+2zc}{1+z^2-2zc}\right).
+ \end{aligned}                                                            \tag{27}\label{eq:27}
+\]
+
+对每个实际弧段取两端的累计量之差。计算上界时，区间减法遵循 \([a,b]-[c,d]=[a-d,b-c]\)。普通能量用质量差 \(\Delta W\)，场向量的矩和方向差用 \(\Delta J_z\)；受约束场与其普通场共用所选弧段的权重。逐方向验证 \(A_z-\mathbb E_z[|\sin\varphi|(k_{v+1}-k_v)]\ge0\) 后，式 \hyperref[eq:19]{(19)} 的排序条件成立。各弧的端点从零连续覆盖到一，故相加得到全圆折叠后的界。二、三次共 \(205\) 段。分母费用的两个实例合计使用 \(402\) 个梯形和 \(27\) 个尾层区间。
+
+
+\Needspace{5\baselineskip}
+\section{附录 B　非零性与素数定理}\label{ux9644ux5f55-c-ux4e24ux4e2aux7528ux5f97ux5230ux7684ux80ccux666fux5b9aux7406}
+
+第 2 节对每个固定输入取了 \(\log|f(\pi)|\)，第 4 节用素数和逼近积分。前者要求定性的非零性，后者要求素数的渐近分布。下面分别证明这两件事，所用的是代数、积分、复分析中的级数和留数定理。
+
+\Needspace{5\baselineskip}
+\subsection{B.1　为什么整系数多项式不能恰好在圆周率处为零}\label{c.1-ux4e3aux4ec0ux4e48ux6574ux7cfbux6570ux591aux9879ux5f0fux4e0dux80fdux6070ux597dux5728ux5706ux5468ux7387ux5904ux4e3aux96f6}
+
+若 \(\pi\) 是代数数，则 \(\alpha=i\pi\) 也是，且 \(1+e^\alpha=0\)。设 \(\alpha_1,\ldots,\alpha_m\) 是 \(\alpha\) 的全体共轭根。展开 \(\prod_{j=1}^m(1+e^{\alpha_j})\)，每个指标子集 \(S\) 给出项 \(e^{\sum_{j\in S}\alpha_j}\)。有 \(k\ge1\) 个子集的和为零（至少有空集）；把其余非零和列为 \(\beta_1,\ldots,\beta_s\)，按出现次数重复列出。由于一个因子为零，有 \[
+ k+\sum_{\nu=1}^s e^{\beta_\nu}=0 .
+\] 取只含原根指标的子集知 \(s\ge1\)。多项式 \(\prod_S(x-\sum_{j\in S}\alpha_j)\) 的系数是各共轭根的整系数对称多项式，故可表为基本对称函数的整系数多项式。这个代数事实可按最高单项式依次消去：若降序指数为 \(d_1\ge\cdots\ge d_m\)，则基本对称函数的乘积 \(e_1^{d_1-d_2}\cdots e_m^{d_m}\) 有相同的首项，次数有界，消去过程终止。根的基本对称函数由定义多项式的系数给出，都是有理数。除去 \(x^k\) 后仍为有理系数。取正整数 \(c\) 清分母，得到 \(A(x)=c\prod_\nu(x-\beta_\nu)\in\mathbb Z[x]\)，且 \(A(0)\ne0\)。
+
+代数整数是首一整系数多项式的根。由 \(c^{s-1}A(x/c)\) 首一可知每个 \(c\beta_\nu\) 都是代数整数。有限个代数整数的和与积仍是代数整数：各自的首一关系可把所有单项式降为有限个幂积的整数线性组合，且这些幂积包含 \(1\)。以所生成环的一个元素相乘，在生成元列表上可用整矩阵表示。Cayley--Hamilton 定理使该乘法满足一个首一整系数方程，作用于 \(1\) 即得该元素的方程。一个有理数若为代数整数，则是整数，把既约分数代入首一方程即可看出。
+
+取任意大的素数 \(p\)，避开固定非零整数 \(kcA(0)\) 的素因子。设 \[
+ D=(s+1)p-1,\quad H_p(x)=x^{p-1}A(x)^p,\quad
+ g_p(x)=c^DH_p(x)/(p-1)!,\quad F_p(x)=\sum_{j=0}^{D}g_p^{(j)}(x).
+\] 对 \(r\le D\)，\(c^D\beta_\nu^r=c^{D-r}(c\beta_\nu)^r\) 是代数整数。在 \(x=0\)，低于 \(p-1\) 的导数均消失，恰好 \(p-1\) 阶的值为 \(c^DA(0)^p\)，其余各项都有整数因子 \(j!/(p-1)!\)，被 \(p\) 整除。故 \(F_p(0)\) 是模 \(p\) 与 \(c^DA(0)^p\) 同余的整数。在 \(x=\beta_\nu\)，因 \(A^p\) 有至少 \(p\) 阶零点，低于 \(p\) 阶的导数全消失；对 \(j\ge p\)，二项式系数保证 \(H_p^{(j)}(x)/j!\) 有整系数。再用 \(c^D\) 即知 \(F_p(\beta_\nu)/p\) 是代数整数。这些数之和又是有理数，因为对全体 \(\beta_\nu\) 的幂和为有理数。因此 \(\sum_\nu F_p(\beta_\nu)\) 是 \(p\) 的整数倍，而 \[
+ kF_p(0)+\sum_\nu F_p(\beta_\nu)
+\] 是一个不被 \(p\) 整除的整数，绝对值至少为一。
+
+另一方面，逐项相减给 \(F_p-F'_p=g_p\)。在连接 \(0,\beta_\nu\) 的直线段上积分，得到 \[
+ e^{\beta_\nu}\int_0^{\beta_\nu}e^{-x}g_p(x)\,dx
+ =e^{\beta_\nu}F_p(0)-F_p(\beta_\nu).
+\] 对 \(\nu\) 求和，右边恰为上面非零整数的相反数。有限条线段组成固定紧集，其上 \(|x|,|A(x)|,|e^{-x}|\) 有固定上界。将线段长度和常数 \(c^D\) 一并吸收，左边总绝对值至多为 \(M^p/(p-1)!\)，\(M\) 与 \(p\) 无关。相邻整数的这些界之比为 \(M/p\)，故趋于零。矛盾证明 \(\pi\) 超越，任一非零整多项式在 \(\pi\) 的值都非零。
+
+\Needspace{5\baselineskip}
+\subsection{B.2　切比雪夫形式的素数定理}\label{c.2-ux5207ux6bd4ux96eaux592bux5f62ux5f0fux7684ux7d20ux6570ux5b9aux7406}
+
+要证 \(\vartheta(x)/x\to1\)，其中 \(\vartheta(x)=\sum_{p\le x}\log p\) 只数素数的第一次幂。下述推导用 Newman 的围道法 {[}6{]}。先证有界，再证明一个解析延拓，最后借单调性把平均信息还原成点态极限。
+
+\textbf{第一步，粗上界。} 每个 \(n<p\le2n\) 的素数都整除 \(\binom{2n}n\)，因为它在分子的阶乘中出现，在两个分母中都不出现。故 \(\vartheta(2n)-\vartheta(n)\le\log\binom{2n}n\le2n\log2\)。取 \(n=1,2,\ldots,2^{j-1}\) 中的二的幂求和，得到 \(\vartheta(2^j)\le2^{j+1}\log2\)。在相邻二的幂之间用单调性，可知 \(\vartheta(x)=O(x)\)。
+
+\textbf{第二步，刻画素数的解析函数。} 在 \(\operatorname{Re}s>1\) 定义 \(\zeta(s)=\sum_{n\ge1}n^{-s}\)。绝对收敛及整数的唯一分解给出乘积 \(\prod_p(1-p^{-s})^{-1}\)。其对数可以取为局部绝对收敛的 \(\sum_{p,k\ge1}p^{-ks}/k\)，故这里没有零点。另一方面，逐项积分 \(\lfloor x\rfloor=\sum_{n\le x}1\) 得 \[
+ \zeta(s)=s\int_1^\infty\lfloor x\rfloor x^{-s-1}\,dx
+ =\frac{s}{s-1}-s\int_1^\infty\{x\}\,x^{-s-1}\,dx .
+\] 最后一个积分在 \(\operatorname{Re}s>0\) 的紧子集上一致收敛，求导后的对数因子也可积，因而给出解析延拓。在 \(s=1\) 有留数为一的单极点。
+
+直线 \(\operatorname{Re}s=1\) 除了极点外也没有零点。固定 \(\tau\ne0\)、\(\sigma>1\)，将 \(3+4\cos u+\cos(2u)=2(1+\cos u)^2\ge0\) 用于 Euler 乘积对数的每个实部（\(u=k\tau\log p\)），取指数得 \[
+ \zeta(\sigma)^3|\zeta(\sigma+i\tau)|^4|\zeta(\sigma+2i\tau)|\ge1 .
+\] 若 \(\zeta(1+i\tau)=0\)，中间因子为 \(O((\sigma-1)^4)\)，第一因子至多 \(O((\sigma-1)^{-3})\)，第三因子有界，令 \(\sigma\downarrow1\) 即矛盾。对乘积取对数微分，得 \[
+ P(s)=\sum_p(\log p)p^{-s}
+ =-\zeta'(s)/\zeta(s)-\sum_p\sum_{k\ge2}(\log p)p^{-ks}.
+\] 最后的和在 \(\operatorname{Re}s>1/2\) 局部绝对收敛，可先求几何级数、再以 \(\sum_{n\ge2}(\log n)n^{-2\sigma}\) 比较。故 \(P(s)-1/(s-1)\) 在整条 \(\operatorname{Re}s=1\) 的每一点附近均可解析延拓，\(s=1\) 处由单极点直接验算。
+
+\textbf{第三步，Laplace 变换的边界引理。} 设 \(f\) 在 \([0,\infty)\) 局部可积且 \(|f|\le M\)，\(g(z)=\int_0^\infty f(t)e^{-zt}dt\) 在 \(\operatorname{Re}z>0\) 解析。若 \(g\) 能解析延拓到虚轴每一点的邻域，则 \(\int_0^T f(t)dt\to g(0)\)。以下给出证明，以免在素数定理中隐藏另一个极限定理。
+
+令 \(g_T(z)=\int_0^Tf(t)e^{-zt}dt\)（整函数）。固定 \(R>0\)，取 \(K_T(z)=e^{Tz}(1+z^2/R^2)/z\)，它在零点留数为一。对 \(g_TK_T\) 用半径 \(R\) 的正向圆周，对 \(gK_T\) 用相同的右半圆，左边则取连接 \(\pm iR\) 的一条略向左突出的半椭圆以闭合它。因为虚轴线段紧，半椭圆及其以内所需的小片区域可选在解析延拓域内。两条围道都包住零。由留数定理，两积分之差除以 \(2\pi i\) 就是 \(g_T(0)-g(0)\)。
+
+在右半圆令 \(\sigma=\operatorname{Re}z>0\)，尾积分给 \(|g_T-g|\le Me^{-T\sigma}/\sigma\)。在原来的左半圆有 \(\sigma<0\)，直接积分给 \(|g_T|\le M(e^{-T\sigma}-1)/|\sigma|\)。在圆上恒有 \(|1+z^2/R^2|=2|\sigma|/R\) 且 \(|z|=R\)。故右弧上差值和左半圆上 \(g_T\) 项的被积函数模都至多为 \(2M/R^2\)；弧长合计 \(2\pi R\)，归一后的总界为 \(2M/R\)。剩下半椭圆上的 \(gK_T\) 积分在 \(T\to\infty\) 时趋零，因为除两端外实部严格为负，指数模至多为一且逐点趋零，其余因子在这条不经过零的固定弧上有界。因而 \(\limsup|g_T(0)-g(0)|\le2M/R\)，再令 \(R\to\infty\) 即证引理。
+
+\textbf{第四步，消除平均。} 取 \(f(t)=e^{-t}\vartheta(e^t)-1\)，由第一步它有界。在 \(\operatorname{Re}z>0\) 对每个素数自 \(t=\log p\) 起积分，得 \(g(z)=P(1+z)/(1+z)-1/z\)。在 \(z=0\) 由 \(P(1+z)=1/z+A(z)\)（\(A\) 在零点附近解析）可见极点抵消，在虚轴其余点的延拓由第二步得到。引理证明 \(\int_0^T f\) 收敛，从而任何端点趋于无穷且长度固定的区间上的 \(f\) 积分都趋于零。
+
+令 \(V(T)=e^{-T}\vartheta(e^T)\)。固定 \(\delta>0\)，由 \(\vartheta\) 单调， \[
+ \begin{aligned}
+ \int_T^{T+\delta}(f(t)+1)\,dt&\ge(1-e^{-\delta})V(T),\\
+ \int_{T-\delta}^T(f(t)+1)\,dt&\le(e^\delta-1)V(T).
+ \end{aligned}
+\] 左边两积分都趋于 \(\delta\)，故 \(\limsup V(T)\le\delta/(1-e^{-\delta})\)，\(\liminf V(T)\ge\delta/(e^\delta-1)\)。令 \(\delta\downarrow0\) 得 \(V(T)\to1\)，即 \(\vartheta(x)/x\to1\)。第 4 节用它计算固定尺度区间的素数权重。
+
+\Needspace{5\baselineskip}
+\section{原稿、数值见证与形式证明索引}
+第 2 至 6 节的基础构造及两个背景定理沿用 11 月 19 日的\repoentry{paper/background/2026-11-19/polynomial-values-zh.tex}{中文讲义}，保留式 (3) 至 (21) 的编号。第 4.3 节与第 6.3 节结合了三份旧研究记录中的余数计数、中心平移和能量估计。这些记录随\repoentry{research/pi_cross_constant_2026-11-18/base-checkpoint.zip}{原始数据包}一同保存；包内顺序是 \texttt{prior/reference/CHECKPOINT.md}（余数计数）、\texttt{prior/CHECKPOINT.md}（扰动定价）、\texttt{CHECKPOINT.md}（最终等宽频带）。第 7、8 节使用 11 月 19 日验收的两个有理端点。充分大次数的渐近问题另见旧讲义。
+
+\begin{center}\begin{tabular}{@{}p{.29\linewidth}p{.64\linewidth}@{}}\toprule
+纸面步骤 & 对应仓库材料（可点击）\\\midrule
+根距、实主根与结式 &
+\leanentry{RootDiscriminant}{判别式}，\leanentry{RootBudgetLimits}{根距预算}，\leanentry{GaussianResultant}{高斯结式}，\leanentry{Analysis/RootSelection}{同一子式与实主根}\\
+选行、次数、清分母 &
+\leanentry{FourPeriod/ActualPrefixMinor}{非零前缀子式}，\leanentry{FourPeriod/ActualDegree}{实际次数界}，\leanentry{Numerics/ActualPrimeCost}{最终分母成本}\\
+空间与角度积分 &
+\leanentry{Analysis/MeshChordError}{整格误差}，\leanentry{Analysis/ReferenceLimits}{参考密度的极限}，\leanentry{Analysis/AngularCorrectionCost}{路径修正}\\
+每个根的解析估计 &
+\leanentry{Analysis/PricedEvaluation}{主根的有价估计}，\leanentry{Analysis/ConjugateEvaluation}{共轭根估计}，\leanentry{Analysis/ResultantRates}{结式上界}\\
+最终有理数 &
+\leanentry{Numerics/RateData}{两个完整分数表}，\leanentry{PricedSimplex}{全单纯形最小值}，\leanentry{Numerics/ResultantMargin}{全区间严格余量}\\
+端点与全体输入 &
+\leanentry{Analysis/EndpointFromPlan}{通用端点证明}，\leanentry{QuadraticEvaluationPlan}{二次见证}，\leanentry{CubicEvaluationPlan}{三次见证}，\leanentry{FactorTransfer}{可约输入}，\leanentry{PolynomialEndpointsAudit}{四项声明}\\\bottomrule
+\end{tabular}\end{center}
+可从\repoentry{research/pi_cross_constant_2026-11-18/diagnostics.json}{原始有理数报告}中查找 \texttt{shape=current} 两项，再读各自的 \texttt{uniform\_endpoint}。在仓库根目录运行下列两条命令，第一条从基础见证重算端点诊断，第二条核对已存的四项声明、传递公理记录和编译对象摘要。完整重编译入口见\repoentry{README.md}{仓库说明}。
+\begin{verbatim}
+python -I -S -B research/pi_cross_constant_2026-11-18/diagnostics.py
+python -B scripts/check_release.py
+\end{verbatim}
+
+
+\Needspace{5\baselineskip}
+\section{参考文献}\label{ux53c2ux8003ux6587ux732e}
+
+{[}1{]} Yu. Nesterenko and M. Waldschmidt. \emph{On the approximation of the values of exponential function and logarithm by algebraic numbers}. Mat. Zapiski \textbf{2}, Diophantine Approximations (1996), 23--42. English preprint (2000), Lemma 2 and Theorem 2. \href{https://arxiv.org/pdf/math/0002047}{Full text}.
+
+{[}2{]} Yu. M. Alexencev. \emph{On the measure of approximation of \(\pi\) by algebraic numbers}. Mathematical Notes \textbf{66} (1999), 395--403. \href{https://www.mathnet.ru/eng/mzm1191}{Journal record}.
+
+{[}3{]} NIST Digital Library of Mathematical Functions, §27.12, \emph{Asymptotic Formulas: Primes}. \href{https://dlmf.nist.gov/27.12}{Prime number theorem}.
+
+{[}4{]} NIST Digital Library of Mathematical Functions, §5.11, \emph{Asymptotic Expansions}. \href{https://dlmf.nist.gov/5.11.E1}{Stirling expansion}.
+
+{[}5{]} NIST Digital Library of Mathematical Functions, §18.5, \emph{Explicit Representations}. \href{https://dlmf.nist.gov/18.5.E1}{Chebyshev trigonometric formula}.
+
+{[}6{]} D. Zagier. \emph{Newman's short proof of the prime number theorem}. American Mathematical Monthly \textbf{104} (1997), 705--708. \href{https://people.mpim-bonn.mpg.de/zagier/files/doi/10.2307/2975232/fulltext.pdf}{作者提供的原文}。
+
+\end{document}

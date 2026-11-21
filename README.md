@@ -1,7 +1,7 @@
 # 圆周率处二次与三次整系数多项式值的统一下界
 
 **2026 年 11 月 19 日 · Lean 4.35.0**  
-[主文 PDF](paper/endpoints.pdf) · [LaTeX 源码](paper/endpoints.tex) · [Lean 四项声明与审计入口](formalization/OddPiPowers/OddPiPowers/PolynomialValues/PolynomialEndpointsAudit.lean) · [原始公理输出](formalization/OddPiPowers/logs/polyval-PolynomialEndpointsAudit-20261119-01.log) · [完整验收记录](formalization/OddPiPowers/logs/polynomial-values-acceptance-20261119.json)
+[完整中文证明 PDF](paper/endpoint-proof-zh.pdf) · [离线审阅包](paper/endpoint-review-zh.zip) · [三页定理摘要](paper/endpoints.pdf) · [Lean 四项声明与审计入口](formalization/OddPiPowers/OddPiPowers/PolynomialValues/PolynomialEndpointsAudit.lean) · [原始公理输出](formalization/OddPiPowers/logs/polyval-PolynomialEndpointsAudit-20261119-01.log) · [完整验收记录](formalization/OddPiPowers/logs/polynomial-values-acceptance-20261119.json)
 
 给定非零整系数多项式 $P(X)=\sum_j a_j X^j$，定义高度 $H(P)=\max_j |a_j|$。对下表中每个次数上限 $d$，均存在一个常数 $c_d>0$，使每个满足 $\deg P\le d$ 的非零 $P\in\mathbb Z[X]$ 都有
 
@@ -59,7 +59,11 @@ python -B scripts/replay.py --build
 
 ## 文稿
 
-主文包含精确端点、从统一下界推出逼近指数的论证、数值见证概况和验收范围。LaTeX 源文件独立，使用含 Fandol、Libertinus 字体的 TeX Live 在 `paper/` 目录下运行两次 `xelatex endpoints.tex` 即可排版。[PDF](paper/endpoints.pdf) · [LaTeX](paper/endpoints.tex)
+**中文证明审阅稿（2026 年 11 月 20 日，23 页）。** 第 2 节从根距得到结式下界。第 3 至 6 节推导前缀选行、清分母、空间积分和扰动列的估计。第 7 节将同一辅助多项式在所有共轭根处的估计合并，第 8 节列出最终等宽频带的输入和有理余量，得到 $16.161227$ 与 $27.412216$。附录给出整格误差和背景定理，文末按步骤链接到形式证明。可在 `paper/` 中用 XeLaTeX 连续编译两次 `endpoint-proof-zh.tex`。[审阅稿 PDF](paper/endpoint-proof-zh.pdf) · [LaTeX 源码](paper/endpoint-proof-zh.tex)
+
+**离线转交。** 下载并解压审阅包即可阅读同一份 PDF，也可按包内说明，用 Python 标准库从原始见证复算最终数值判据。包内附有早期分步证明、两组原始输入、最终有理参数和四项 Lean 声明的公理输出。[下载离线审阅包](paper/endpoint-review-zh.zip)
+
+三页摘要包含精确端点、从统一下界推出逼近指数的论证、数值见证概况和验收范围。LaTeX 源文件独立，使用含 Fandol、Libertinus 字体的 TeX Live 在 `paper/` 目录下运行两次 `xelatex endpoints.tex` 即可排版。[PDF](paper/endpoints.pdf) · [LaTeX](paper/endpoints.tex)
 
 背景讲义保留旧版见证的 $16.1942$、$27.4188$，并讨论充分大次数的渐近系数 $8.32$。该渐近结论及讲义中的其他推广均未纳入上述四项 Lean 验收。[中文 PDF](paper/background/2026-11-19/polynomial-values-zh.pdf) · [中文 LaTeX](paper/background/2026-11-19/polynomial-values-zh.tex) · [English PDF](paper/background/2026-11-19/polynomial-values-en.pdf) · [English LaTeX](paper/background/2026-11-19/polynomial-values-en.tex)
 
